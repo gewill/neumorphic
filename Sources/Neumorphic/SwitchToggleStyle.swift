@@ -23,7 +23,6 @@ public struct SwitchToggleStyle: ToggleStyle {
         return HStack {
             if !hideLabel {
                 configuration.label
-                    .font(.body)
                 Spacer()
             }
             ZStack {
