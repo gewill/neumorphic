@@ -71,7 +71,7 @@ public struct FixedSizeSoftDynamicButtonStyle<S: Shape>: ButtonStyle {
     }
 }
 
-extension Button {
+public extension Button {
     func fixedSizeSoftButtonStyle<S: Shape>(_ content: S = Circle(), mainColor: Color = Color.Neumorphic.main, textColor: Color = Color.Neumorphic.secondary, darkShadowColor: Color = Color.Neumorphic.darkShadow, lightShadowColor: Color = Color.Neumorphic.lightShadow, pressedEffect: SoftButtonPressedEffect = .hard, size: CGSize = .init(width: 30, height: 30)) -> some View {
         buttonStyle(FixedSizeSoftDynamicButtonStyle(Circle(), mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor, lightShadowColor: lightShadowColor, pressedEffect: pressedEffect, padding: 0, size: size))
     }
