@@ -73,7 +73,7 @@ public struct FixedSizeSoftDynamicButtonStyle<S: Shape>: ButtonStyle {
 
 public extension Button {
     func fixedSizeSoftButtonStyle<S: Shape>(_ content: S = Circle(), mainColor: Color = Color.Neumorphic.main, textColor: Color = Color.Neumorphic.secondary, darkShadowColor: Color = Color.Neumorphic.darkShadow, lightShadowColor: Color = Color.Neumorphic.lightShadow, pressedEffect: SoftButtonPressedEffect = .hard, size: CGSize = .init(width: 30, height: 30)) -> some View {
-        buttonStyle(FixedSizeSoftDynamicButtonStyle(Circle(), mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor, lightShadowColor: lightShadowColor, pressedEffect: pressedEffect, padding: 0, size: size))
+        buttonStyle(FixedSizeSoftDynamicButtonStyle(content, mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor, lightShadowColor: lightShadowColor, pressedEffect: pressedEffect, padding: 0, size: size))
     }
 }
 
@@ -82,6 +82,6 @@ struct ButtonStyles_Previews: PreviewProvider {
         Button {} label: {
             Image(systemName: "xmark")
         }
-        .fixedSizeSoftButtonStyle(mainColor: Color.accentColor, textColor: Color.Neumorphic.main, size: .init(width: 60, height: 60))
+        .fixedSizeSoftButtonStyle(RoundedRectangle(cornerRadius: 12), mainColor: Color.accentColor, textColor: Color.Neumorphic.main, size: .init(width: 60, height: 60))
     }
 }
