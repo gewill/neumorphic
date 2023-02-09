@@ -80,8 +80,9 @@ public extension Button {
 struct ButtonStyles_Previews: PreviewProvider {
     static var previews: some View {
         Button {} label: {
-            Image(systemName: "xmark")
+            Text("Close")
         }
         .fixedSizeSoftButtonStyle(RoundedRectangle(cornerRadius: 12), mainColor: Color.accentColor, textColor: Color.Neumorphic.main, size: .init(width: 60, height: 60))
+        .padding()
     }
 }
