@@ -138,10 +138,20 @@ public struct SoftButtonStyle<S: Shape>: ButtonStyle {
                 .foregroundColor(textColor)
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .padding()
-                .scaleEffect(configuration.isPressed ? 0.97 : 1)
+                .modifier(SoftButtonPressScaleModifier(isPressed: configuration.isPressed))
         }
     }
 
+}
+
+private struct SoftButtonPressScaleModifier: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    let isPressed: Bool
+
+    func body(content: Content) -> some View {
+        content.scaleEffect(isPressed && !reduceMotion ? 0.97 : 1)
+    }
 }
 
 public extension View {

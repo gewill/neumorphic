@@ -6,14 +6,20 @@ public struct NeumorphicCheckbox: View {
     @Binding private var isOn: Bool
     private let label: String
 
+    /// Creates a checkbox bound to a Boolean value.
+    ///
+    /// - Parameters:
+    ///   - label: The visible and accessibility label for the checkbox.
+    ///   - isOn: A binding that stores the checkbox state.
     public init(_ label: String, isOn: Binding<Bool>) {
         self.label = label
         self._isOn = isOn
     }
 
+    /// The rendered checkbox.
     public var body: some View {
         Button {
-            isOn.toggle()
+            NeumorphicControlAction.toggle(_isOn)
         } label: {
             HStack(spacing: 10) {
                 RoundedRectangle(cornerRadius: 6).fill(theme.mainColor).frame(width: 28, height: 28)
@@ -41,15 +47,22 @@ public struct NeumorphicRadio<Value: Hashable>: View {
     private let value: Value
     private let label: String
 
+    /// Creates a radio button for one candidate value.
+    ///
+    /// - Parameters:
+    ///   - label: The visible and accessibility label for the radio button.
+    ///   - value: The value this radio button selects.
+    ///   - selection: A binding to the selected value in the radio group.
     public init(_ label: String, value: Value, selection: Binding<Value>) {
         self.label = label
         self.value = value
         self._selection = selection
     }
 
+    /// The rendered radio button.
     public var body: some View {
         Button {
-            selection = value
+            NeumorphicControlAction.select(value, selection: _selection)
         } label: {
             HStack(spacing: 10) {
                 Circle().fill(theme.mainColor).frame(width: 28, height: 28)

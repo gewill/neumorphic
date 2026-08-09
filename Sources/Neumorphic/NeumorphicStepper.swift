@@ -7,12 +7,19 @@ public struct NeumorphicStepper: View {
     private let bounds: ClosedRange<Int>
     private let label: String
 
+    /// Creates a stepper that changes an integer by one per activation.
+    ///
+    /// - Parameters:
+    ///   - label: The text that describes the value.
+    ///   - value: A binding to the current value.
+    ///   - bounds: The limits applied by the decrement and increment buttons.
     public init(_ label: String = "Value", value: Binding<Int>, in bounds: ClosedRange<Int> = 0...100) {
         self.label = label
         self._value = value
         self.bounds = bounds.lowerBound...max(bounds.lowerBound, bounds.upperBound)
     }
 
+    /// The rendered stepper.
     public var body: some View {
         HStack(spacing: 12) {
             Button {

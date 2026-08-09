@@ -2,11 +2,22 @@ import SwiftUI
 
 /// A group of colors used by Neumorphic controls.
 public struct NeumorphicTheme: @unchecked Sendable {
+    /// The surface color used by controls and containers.
     public let mainColor: Color
+    /// The foreground color used by labels and symbols.
     public let secondaryColor: Color
+    /// The shadow color applied toward the lower-right edge of raised surfaces.
     public let darkShadowColor: Color
+    /// The highlight color applied toward the upper-left edge of raised surfaces.
     public let lightShadowColor: Color
 
+    /// Creates a theme from surface, foreground, and shadow colors.
+    ///
+    /// - Parameters:
+    ///   - mainColor: The surface color used by controls and containers.
+    ///   - secondaryColor: The foreground color used by labels and symbols.
+    ///   - darkShadowColor: The darker shadow color for raised and inset surfaces.
+    ///   - lightShadowColor: The lighter highlight color for raised and inset surfaces.
     public init(
         mainColor: Color,
         secondaryColor: Color,
@@ -43,13 +54,26 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
         case theme(opacity: Double)
     }
 
+    /// The darker color used by the shadow.
     public let darkShadowColor: Color
+    /// The lighter color used by the shadow.
     public let lightShadowColor: Color
+    /// The distance of an outer shadow from its surface, normalized to a nonnegative value.
     public let offset: CGFloat
+    /// The shadow blur radius, normalized to a nonnegative value.
     public let radius: CGFloat
+    /// The inset shadow spread, normalized to the closed range from zero through one.
     public let spread: CGFloat
     private let colorSource: ColorSource
 
+    /// Creates a shadow preset with explicit colors and geometry.
+    ///
+    /// - Parameters:
+    ///   - darkShadowColor: The darker color used by the shadow.
+    ///   - lightShadowColor: The lighter color used by the shadow.
+    ///   - offset: The outer-shadow offset. Negative values are normalized to zero.
+    ///   - radius: The blur radius. Negative values are normalized to zero.
+    ///   - spread: The inset-shadow spread. Values are clamped to the closed range from zero through one.
     public init(
         darkShadowColor: Color,
         lightShadowColor: Color,
@@ -65,6 +89,7 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
         self.colorSource = .explicit
     }
 
+    /// The standard shadow geometry and default Neumorphic shadow colors.
     public static let standard = NeumorphicShadowPreset(
         darkShadowColor: .Neumorphic.darkShadow,
         lightShadowColor: .Neumorphic.lightShadow,

@@ -5,19 +5,19 @@ extension View {
         label: String, value: String, adjust: @escaping (AccessibilityAdjustmentDirection) -> Void
     ) -> some View {
         accessibilityElement(children: .ignore)
-            .accessibility(label: Text(verbatim: label))
+            .accessibility(label: Text(LocalizedStringKey(label)))
             .accessibility(value: Text(verbatim: value))
             .accessibilityAdjustableAction(adjust)
     }
 
     func neumorphicProgressAccessibility(label: String, value: Text) -> some View {
         accessibilityElement(children: .ignore)
-            .accessibility(label: Text(verbatim: label))
+            .accessibility(label: Text(LocalizedStringKey(label)))
             .accessibility(value: value)
     }
 
     func neumorphicSelectionAccessibility(label: String, selected: Bool) -> some View {
-        accessibility(label: Text(verbatim: label))
+        accessibility(label: Text(LocalizedStringKey(label)))
             .accessibility(
                 value: Text(LocalizedStringKey(selected ? "Selected" : "Not selected"))
             )
@@ -27,11 +27,11 @@ extension View {
     func neumorphicButtonAccessibility(label: String, hint: String? = nil) -> some View {
         if let hint = hint {
             neumorphicButtonAccessibility(
-                label: Text(verbatim: label),
+                label: Text(LocalizedStringKey(label)),
                 hint: Text(LocalizedStringKey(hint))
             )
         } else {
-            neumorphicButtonAccessibility(label: Text(verbatim: label))
+            neumorphicButtonAccessibility(label: Text(LocalizedStringKey(label)))
         }
     }
 

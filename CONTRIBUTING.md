@@ -14,7 +14,7 @@ Run the same checks as CI:
 git diff --check
 swift format lint --recursive --strict Package.swift Sources Tests neumorphic-examples/Shared
 swift test --scratch-path .build/macos
-swift build --target Neumorphic --scratch-path .build/macos-minimum --sdk "$(xcrun --sdk macosx --show-sdk-path)" --triple arm64-apple-macosx10.15
+swift build --target Neumorphic --scratch-path .build/macos-minimum --sdk "$(xcrun --sdk macosx --show-sdk-path)" --triple x86_64-apple-macosx10.15
 swift build --scratch-path .build/ios --sdk "$(xcrun --sdk iphoneos --show-sdk-path)" --triple arm64-apple-ios13.0
 swiftc -typecheck -swift-version 6 -strict-concurrency=complete -target arm64-apple-macosx14.0 -module-name Neumorphic Sources/Neumorphic/*.swift
 swift package diagnose-api-breaking-changes v2.1.0 --products Neumorphic

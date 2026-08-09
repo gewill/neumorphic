@@ -7,16 +7,23 @@ public struct NeumorphicDisclosureGroup<Content: View>: View {
     @Binding private var isExpanded: Bool
     private let content: Content
 
+    /// Creates an expandable neumorphic group.
+    ///
+    /// - Parameters:
+    ///   - title: The text displayed in the group header.
+    ///   - isExpanded: A binding that controls whether the content is visible.
+    ///   - content: The content revealed when the group is expanded.
     public init(_ title: String, isExpanded: Binding<Bool>, @ViewBuilder content: () -> Content) {
         self.title = title
         self._isExpanded = isExpanded
         self.content = content()
     }
 
+    /// The rendered disclosure group.
     public var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Button {
-                isExpanded.toggle()
+                NeumorphicControlAction.toggle(_isExpanded)
             } label: {
                 HStack {
                     Text(title).font(.headline)

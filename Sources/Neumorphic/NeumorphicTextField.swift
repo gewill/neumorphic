@@ -7,12 +7,19 @@ public struct NeumorphicTextField: View {
     @Binding private var text: String
     private let isSecure: Bool
 
+    /// Creates a text input on a soft inset surface.
+    ///
+    /// - Parameters:
+    ///   - title: The prompt shown when the field is empty.
+    ///   - text: A binding to the editable text.
+    ///   - secure: A Boolean value that uses a secure field when `true`.
     public init(_ title: String, text: Binding<String>, secure: Bool = false) {
         self.title = title
         self._text = text
         self.isSecure = secure
     }
 
+    /// The rendered text field.
     public var body: some View {
         Group {
             if isSecure { SecureField(title, text: $text) } else { TextField(title, text: $text) }

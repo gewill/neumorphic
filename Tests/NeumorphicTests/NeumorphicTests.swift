@@ -193,6 +193,28 @@ final class NeumorphicTests: XCTestCase {
         XCTAssertNil(NeumorphicProgressMath.normalizedFraction(value: nil, total: 10))
     }
 
+    func testPickerMenuAndRadioSelectionActionsUpdateBinding() {
+        var selection = "One"
+        let binding = Binding(get: { selection }, set: { selection = $0 })
+
+        NeumorphicControlAction.select("Two", selection: binding)
+        XCTAssertEqual(selection, "Two")
+
+        NeumorphicControlAction.select("Radio", selection: binding)
+        XCTAssertEqual(selection, "Radio")
+    }
+
+    func testCheckboxAndDisclosureActionsToggleBinding() {
+        var isOn = false
+        let binding = Binding(get: { isOn }, set: { isOn = $0 })
+
+        NeumorphicControlAction.toggle(binding)
+        XCTAssertTrue(isOn)
+
+        NeumorphicControlAction.toggle(binding)
+        XCTAssertFalse(isOn)
+    }
+
     private func isColorScheme(
         _ lhs: NeumorphicKit.ColorSchemeType,
         equalTo rhs: NeumorphicKit.ColorSchemeType
@@ -204,25 +226,4 @@ final class NeumorphicTests: XCTestCase {
             false
         }
     }
-
-    static var allTests = [
-        ("testColorSchemeTypeRoundTrips", testColorSchemeTypeRoundTrips),
-        ("testNeumorphicColorsCanBeResolvedForEveryColorScheme", testNeumorphicColorsCanBeResolvedForEveryColorScheme),
-        ("testPublicStyleEntryPointsCompile", testPublicStyleEntryPointsCompile),
-        ("testStyleParametersNormalizeNegativeGeometry", testStyleParametersNormalizeNegativeGeometry),
-        ("testFocusRingEntryPointCompiles", testFocusRingEntryPointCompiles),
-        ("testThemeEntryPointsCompile", testThemeEntryPointsCompile),
-        ("testHoverEntryPointCompiles", testHoverEntryPointCompiles),
-        ("testShadowPresetsNormalizeParameters", testShadowPresetsNormalizeParameters),
-        ("testCommonControlEntryPointsCompile", testCommonControlEntryPointsCompile),
-        ("testRemainingControlEntryPointsCompile", testRemainingControlEntryPointsCompile),
-        ("testNextCommonControlEntryPointsCompile", testNextCommonControlEntryPointsCompile),
-        ("testSliderStepIsAnchoredToLowerBound", testSliderStepIsAnchoredToLowerBound),
-        ("testSliderAccessibilityAdjustmentKeepsStepSequence", testSliderAccessibilityAdjustmentKeepsStepSequence),
-        ("testSliderEditingSessionOnlyReportsTransitions", testSliderEditingSessionOnlyReportsTransitions),
-        (
-            "testProgressFractionClampsVisualAndAccessibilityValue",
-            testProgressFractionClampsVisualAndAccessibilityValue
-        ),
-    ]
 }

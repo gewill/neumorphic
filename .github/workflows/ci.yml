@@ -32,7 +32,7 @@ jobs:
         run: swift test --scratch-path .build/macos
 
       - name: Build for minimum macOS version
-        run: swift build --target Neumorphic --scratch-path .build/macos-minimum --sdk "$(xcrun --sdk macosx --show-sdk-path)" --triple arm64-apple-macosx10.15
+        run: swift build --target Neumorphic --scratch-path .build/macos-minimum --sdk "$(xcrun --sdk macosx --show-sdk-path)" --triple x86_64-apple-macosx10.15
 
       - name: Build for iOS
         run: swift build --scratch-path .build/ios --sdk "$(xcrun --sdk iphoneos --show-sdk-path)" --triple arm64-apple-ios13.0

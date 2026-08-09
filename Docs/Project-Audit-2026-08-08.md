@@ -27,7 +27,7 @@
 
 - 位置：`Tests/NeumorphicTests/NeumorphicTests.swift:5`
 - 原占位测试已替换为颜色模式往返、默认颜色解析和控件行为测试。
-- 已移除旧的 `Tests/LinuxMain.swift` 与 `XCTestManifests.swift`，改用自动发现；当前 `swift test` 执行 15 个测试，全部通过，覆盖公共样式入口、disabled 状态、负几何参数、Slider 步进与编辑会话，以及 Progress 边界归一化。
+- 已移除旧的 `Tests/LinuxMain.swift` 与 `XCTestManifests.swift`，改用自动发现；当前 `swift test` 执行 17 个测试，全部通过，覆盖公共样式入口、disabled 状态、负几何参数、Slider 步进与编辑会话、Progress 边界归一化，以及选择和展开状态变化。
 
 ### 3. 缺少 CI。**状态：已完成。**
 

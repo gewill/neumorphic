@@ -9,6 +9,14 @@ public struct NeumorphicProgressView: View {
     private let height: CGFloat
     private let accessibilityLabel: String
 
+    /// Creates a linear progress indicator.
+    ///
+    /// - Parameters:
+    ///   - value: The completed amount, or `nil` to display an indeterminate indicator.
+    ///   - total: The amount that represents completion. Negative values are normalized to zero.
+    ///   - tint: The color of the progress fill.
+    ///   - height: The track height. Values below 2 points are normalized to 2.
+    ///   - accessibilityLabel: The label VoiceOver uses for the indicator.
     public init(
         value: Double?, total: Double = 1, tint: Color = .accentColor, height: CGFloat = 10,
         accessibilityLabel: String = "Progress"
@@ -20,6 +28,7 @@ public struct NeumorphicProgressView: View {
         self.accessibilityLabel = accessibilityLabel
     }
 
+    /// The rendered linear progress indicator.
     public var body: some View {
         GeometryReader { proxy in
             let fraction = NeumorphicProgressMath.normalizedFraction(value: value, total: total)

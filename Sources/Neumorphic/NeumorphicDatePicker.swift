@@ -8,6 +8,13 @@ public struct NeumorphicDatePicker: View {
     private let range: ClosedRange<Date>?
     private let displayedComponents: DatePickerComponents
 
+    /// Creates a date picker on a neumorphic surface.
+    ///
+    /// - Parameters:
+    ///   - title: The text that describes the date selection.
+    ///   - selection: A binding to the selected date.
+    ///   - range: The optional range of selectable dates.
+    ///   - displayedComponents: The date components available for editing.
     public init(
         _ title: String, selection: Binding<Date>, in range: ClosedRange<Date>? = nil,
         displayedComponents: DatePickerComponents = [.date, .hourAndMinute]
@@ -18,6 +25,7 @@ public struct NeumorphicDatePicker: View {
         self.displayedComponents = displayedComponents
     }
 
+    /// The rendered date picker.
     public var body: some View {
         Group {
             if let range {

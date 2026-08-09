@@ -11,6 +11,7 @@ public struct NeumorphicSlider: View {
     private let accessibilityLabel: String
     private let onEditingChanged: (Bool) -> Void
 
+    /// Creates a slider bound to a value within the supplied range.
     public init(
         value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double = 0, tint: Color = .accentColor,
         accessibilityLabel: String = "Slider", onEditingChanged: @escaping (Bool) -> Void = { _ in }
@@ -23,8 +24,9 @@ public struct NeumorphicSlider: View {
         self.onEditingChanged = onEditingChanged
     }
 
+    /// The slider's visual and interactive content.
     public var body: some View {
-        GeometryReader { proxy in
+        let slider = GeometryReader { proxy in
             let width = max(proxy.size.width, 1)
             let progress = normalizedValue
             ZStack(alignment: .leading) {
@@ -64,15 +66,21 @@ public struct NeumorphicSlider: View {
                 })
         }
         .frame(minHeight: 44)
-        .neumorphicSliderAccessibility(label: accessibilityLabel, value: String(format: "%.2f", value)) { direction in
-            switch direction {
-            case .increment:
-                value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: true)
-            case .decrement:
-                value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: false)
-            @unknown default: break
-            }
+        .neumorphicSliderAccessibility(label: accessibilityLabel, value: String(format: "%.2f", value)) {
+            direction in
+            adjustValue(for: direction)
         }
+
+        #if os(macOS)
+            slider
+                .modifier(
+                    NeumorphicSliderKeyboardInteraction(
+                        onMove: adjustValue(for:)
+                    )
+                )
+        #else
+            slider
+        #endif
     }
 
     private var normalizedValue: CGFloat {
@@ -89,7 +97,72 @@ public struct NeumorphicSlider: View {
             step: step
         )
     }
+
+    private func adjustValue(for direction: AccessibilityAdjustmentDirection) {
+        switch direction {
+        case .increment:
+            value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: true)
+        case .decrement:
+            value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: false)
+        @unknown default:
+            break
+        }
+    }
+
+    #if os(macOS)
+        private func adjustValue(for direction: MoveCommandDirection) {
+            switch direction {
+            case .right, .up:
+                value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: true)
+            case .left, .down:
+                value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: false)
+            @unknown default:
+                break
+            }
+        }
+    #endif
 }
+
+#if os(macOS)
+    private struct NeumorphicSliderKeyboardInteraction: ViewModifier {
+        @State private var isFocused = false
+        let onMove: (MoveCommandDirection) -> Void
+
+        @ViewBuilder
+        func body(content: Content) -> some View {
+            if #available(macOS 12.0, *) {
+                NeumorphicSliderModernKeyboardTarget(
+                    content: content,
+                    onMove: onMove
+                )
+            } else {
+                content
+                    .focusable(true) { isFocused = $0 }
+                    .onMoveCommand(perform: onMove)
+                    .neumorphicFocusRing(Capsule(), isFocused: $isFocused)
+            }
+        }
+    }
+
+    @available(macOS 12.0, *)
+    private struct NeumorphicSliderModernKeyboardTarget<Content: View>: View {
+        let content: Content
+        let onMove: (MoveCommandDirection) -> Void
+        @FocusState private var focus: Bool
+
+        private var ringBinding: Binding<Bool> {
+            Binding(get: { focus }, set: { focus = $0 })
+        }
+
+        var body: some View {
+            content
+                .focusable()
+                .focused($focus)
+                .onMoveCommand(perform: onMove)
+                .neumorphicFocusRing(Capsule(), isFocused: ringBinding)
+        }
+    }
+#endif
 
 struct NeumorphicSliderEditingSession {
     private(set) var isEditing = false

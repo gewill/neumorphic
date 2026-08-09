@@ -18,7 +18,7 @@ The package supports iOS 13.0 and later and macOS 10.15 and later. Use the defau
 import Neumorphic
 
 Button("Save") { }
-    .softButtonStyle(RoundedRectangle(cornerRadius: 12))
+    .neumorphicThemedButtonStyle(RoundedRectangle(cornerRadius: 12))
 
 Toggle("Enabled", isOn: $isEnabled)
     .toggleStyle(.neumorphicSwitch)

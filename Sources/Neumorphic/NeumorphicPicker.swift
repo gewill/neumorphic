@@ -7,6 +7,12 @@ public struct NeumorphicPicker<Selection: Hashable>: View {
     private let options: [Selection]
     private let label: (Selection) -> String
 
+    /// Creates a segmented neumorphic picker.
+    ///
+    /// - Parameters:
+    ///   - selection: A binding to the selected value.
+    ///   - options: The values displayed by the picker.
+    ///   - label: A closure that provides display and accessibility text for each value.
     public init(
         selection: Binding<Selection>, options: [Selection],
         label: @escaping (Selection) -> String = { String(describing: $0) }
@@ -16,11 +22,12 @@ public struct NeumorphicPicker<Selection: Hashable>: View {
         self.label = label
     }
 
+    /// The rendered segmented picker.
     public var body: some View {
         HStack(spacing: 8) {
             ForEach(options, id: \.self) { option in
                 Button {
-                    selection = option
+                    NeumorphicControlAction.select(option, selection: _selection)
                 } label: {
                     Text(label(option)).font(.subheadline.weight(.medium)).multilineTextAlignment(.center).frame(
                         maxWidth: .infinity, minHeight: 44)

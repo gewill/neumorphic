@@ -88,7 +88,7 @@ RoundedRectangle(cornerRadius: 20).fill(Color.Neumorphic.main).softInnerShadow(R
 Button(action: {}) {
     Text("Soft Button").fontWeight(.bold)
 }
-.softButtonStyle(RoundedRectangle(cornerRadius: 20))
+.neumorphicThemedButtonStyle(RoundedRectangle(cornerRadius: 20))
 ```
 
 #### Create Soft Button with custom style
@@ -97,11 +97,22 @@ Button(action: {}) {
 HStack {
     Button(action: {}) {
         Image(systemName: "heart.fill")
-    }.softButtonStyle(Circle())
+    }
+    .neumorphicThemedButtonStyle(Circle())
 
     Button(action: {}) {
         Image(systemName: "heart.fill")
-    }.softButtonStyle(Circle(), mainColor: Color.red, textColor: Color.white, darkShadowColor: Color(rgb: 0x993333, alpha: 1), lightShadowColor:Color("redButtonLightShadow"))
+    }
+    .buttonStyle(
+        SoftDynamicButtonStyle(
+            Circle(),
+            mainColor: .red,
+            textColor: .white,
+            darkShadowColor: Color(red: 0.6, green: 0.2, blue: 0.2),
+            lightShadowColor: Color("redButtonLightShadow"),
+            pressedEffect: .hard
+        )
+    )
 }
 ```
 
@@ -156,10 +167,16 @@ ZStack(alignment: .bottom){
 Open the file-synchronized, multi-platform **neumorphic-examples** Xcode project to explore every control on iOS and macOS, including theme and accessibility previews.
 
 
-## Soft Button Style Customization 
+## Soft Button Style Customization
 ```swift
-softButtonStyle<S : Shape>(_ content: S, padding: CGFloat, mainColor: Color, textColor: Color, darkShadowColor: Color, lightShadowColor: Color, pressedEffect: SoftButtonPressedEffect)
+neumorphicThemedButtonStyle<S: Shape>(
+    _ shape: S,
+    padding: CGFloat,
+    pressedEffect: SoftButtonPressedEffect
+)
 ```
+
+Use `SoftDynamicButtonStyle` directly when a button needs colors that differ from the current `NeumorphicTheme`.
 
 ## Soft Button - Pressed Effects
 
@@ -170,15 +187,15 @@ softButtonStyle<S : Shape>(_ content: S, padding: CGFloat, mainColor: Color, tex
                         Spacer()
                         Button(action: {}) {
                             Text(".none").fontWeight(.bold)
-                        }.softButtonStyle(Capsule(), pressedEffect: .none)
+                        }.neumorphicThemedButtonStyle(Capsule(), pressedEffect: .none)
                         Spacer()
                         Button(action: {}) {
                             Text(".flat").fontWeight(.bold)
-                        }.softButtonStyle(Capsule(), pressedEffect: .flat)
+                        }.neumorphicThemedButtonStyle(Capsule(), pressedEffect: .flat)
                         Spacer()
                         Button(action: {}) {
                             Text(".hard").fontWeight(.bold)
-                        }.softButtonStyle(Capsule(), pressedEffect: .hard)
+                        }.neumorphicThemedButtonStyle(Capsule(), pressedEffect: .hard)
                         Spacer()
                     }
 ```
@@ -190,7 +207,7 @@ softButtonStyle<S : Shape>(_ content: S, padding: CGFloat, mainColor: Color, tex
 
 ```swift
 Toggle("Toggle", isOn: $toggleIsOn)
-  .softSwitchToggleStyle(tint: .green, labelsHidden: true)
+  .toggleStyle(NeumorphicSwitchToggleStyle(tint: .green, labelsHidden: true))
 ```
 
 For the standalone toggle style, use the unambiguous SwiftUI-compatible entry point:
@@ -215,7 +232,7 @@ For example, Play and Stop Button
                 .font(.title)
         }
     })
-    .softToggleStyle(Circle(), padding: 20)
+    .neumorphicThemedToggleStyle(Circle(), padding: 20)
 ```
 
 ## Themes, Light Mode, and Dark Mode

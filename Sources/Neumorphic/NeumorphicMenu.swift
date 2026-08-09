@@ -9,6 +9,13 @@ public struct NeumorphicMenu<Selection: Hashable>: View {
     private let options: [Selection]
     private let label: (Selection) -> String
 
+    /// Creates a neumorphic menu for choosing one value.
+    ///
+    /// - Parameters:
+    ///   - title: The accessibility label for the menu trigger.
+    ///   - selection: A binding to the selected value.
+    ///   - options: The values available for selection.
+    ///   - label: A closure that provides display text for each value.
     public init(
         _ title: String, selection: Binding<Selection>, options: [Selection],
         label: @escaping (Selection) -> String = { String(describing: $0) }
@@ -19,11 +26,12 @@ public struct NeumorphicMenu<Selection: Hashable>: View {
         self.label = label
     }
 
+    /// The rendered menu.
     public var body: some View {
         Menu {
             ForEach(options, id: \.self) { option in
                 Button {
-                    selection = option
+                    NeumorphicControlAction.select(option, selection: _selection)
                 } label: {
                     Text(label(option))
                 }
