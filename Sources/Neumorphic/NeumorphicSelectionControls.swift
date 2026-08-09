@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A neumorphic checkbox control.
 public struct NeumorphicCheckbox: View {
+    @Environment(\.neumorphicTheme) private var theme
     @Binding private var isOn: Bool
     private let label: String
 
@@ -11,12 +12,20 @@ public struct NeumorphicCheckbox: View {
     }
 
     public var body: some View {
-        Button { isOn.toggle() } label: {
+        Button {
+            isOn.toggle()
+        } label: {
             HStack(spacing: 10) {
-                RoundedRectangle(cornerRadius: 6).fill(Color.Neumorphic.main).frame(width: 28, height: 28)
-                    .softInnerShadow(RoundedRectangle(cornerRadius: 6), spread: 0.55, radius: 3)
+                RoundedRectangle(cornerRadius: 6).fill(theme.mainColor).frame(width: 28, height: 28)
+                    .softInnerShadow(
+                        RoundedRectangle(cornerRadius: 6),
+                        darkShadow: theme.darkShadowColor,
+                        lightShadow: theme.lightShadowColor,
+                        spread: 0.55,
+                        radius: 3
+                    )
                     .overlay(Text("✓").font(.caption.weight(.bold)).foregroundColor(.accentColor).opacity(isOn ? 1 : 0))
-                Text(label).foregroundColor(Color.Neumorphic.secondary)
+                Text(label).foregroundColor(theme.secondaryColor)
             }
         }
         .buttonStyle(PlainButtonStyle())
@@ -27,6 +36,7 @@ public struct NeumorphicCheckbox: View {
 
 /// A neumorphic radio button control.
 public struct NeumorphicRadio<Value: Hashable>: View {
+    @Environment(\.neumorphicTheme) private var theme
     @Binding private var selection: Value
     private let value: Value
     private let label: String
@@ -38,12 +48,22 @@ public struct NeumorphicRadio<Value: Hashable>: View {
     }
 
     public var body: some View {
-        Button { selection = value } label: {
+        Button {
+            selection = value
+        } label: {
             HStack(spacing: 10) {
-                Circle().fill(Color.Neumorphic.main).frame(width: 28, height: 28)
-                    .softInnerShadow(Circle(), spread: 0.55, radius: 3)
-                    .overlay(Circle().fill(Color.accentColor).frame(width: 10, height: 10).opacity(selection == value ? 1 : 0))
-                Text(label).foregroundColor(Color.Neumorphic.secondary)
+                Circle().fill(theme.mainColor).frame(width: 28, height: 28)
+                    .softInnerShadow(
+                        Circle(),
+                        darkShadow: theme.darkShadowColor,
+                        lightShadow: theme.lightShadowColor,
+                        spread: 0.55,
+                        radius: 3
+                    )
+                    .overlay(
+                        Circle().fill(Color.accentColor).frame(width: 10, height: 10).opacity(
+                            selection == value ? 1 : 0))
+                Text(label).foregroundColor(theme.secondaryColor)
             }
         }
         .buttonStyle(PlainButtonStyle())

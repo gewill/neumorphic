@@ -2,11 +2,15 @@ import SwiftUI
 
 /// A compact segmented picker for a small set of hashable options.
 public struct NeumorphicPicker<Selection: Hashable>: View {
+    @Environment(\.neumorphicTheme) private var theme
     @Binding private var selection: Selection
     private let options: [Selection]
     private let label: (Selection) -> String
 
-    public init(selection: Binding<Selection>, options: [Selection], label: @escaping (Selection) -> String = { String(describing: $0) }) {
+    public init(
+        selection: Binding<Selection>, options: [Selection],
+        label: @escaping (Selection) -> String = { String(describing: $0) }
+    ) {
         self._selection = selection
         self.options = options
         self.label = label
@@ -15,10 +19,18 @@ public struct NeumorphicPicker<Selection: Hashable>: View {
     public var body: some View {
         HStack(spacing: 8) {
             ForEach(options, id: \.self) { option in
-                Button { selection = option } label: {
-                    Text(label(option)).font(.subheadline.weight(.medium)).multilineTextAlignment(.center).frame(maxWidth: .infinity, minHeight: 44)
+                Button {
+                    selection = option
+                } label: {
+                    Text(label(option)).font(.subheadline.weight(.medium)).multilineTextAlignment(.center).frame(
+                        maxWidth: .infinity, minHeight: 44)
                 }
-                .buttonStyle(SoftDynamicButtonStyle(Capsule(), mainColor: .Neumorphic.main, textColor: .Neumorphic.secondary, darkShadowColor: .Neumorphic.darkShadow, lightShadowColor: .Neumorphic.lightShadow, pressedEffect: selection == option ? .flat : .none, padding: 10))
+                .buttonStyle(
+                    SoftDynamicButtonStyle(
+                        Capsule(), mainColor: theme.mainColor, textColor: theme.secondaryColor,
+                        darkShadowColor: theme.darkShadowColor, lightShadowColor: theme.lightShadowColor,
+                        pressedEffect: selection == option ? .flat : .none, padding: 10)
+                )
                 .opacity(selection == option ? 1 : 0.75)
                 .neumorphicSelectionAccessibility(label: label(option), selected: selection == option)
             }

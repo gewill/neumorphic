@@ -19,7 +19,7 @@ public struct NeumorphicTheme: @unchecked Sendable {
         self.lightShadowColor = lightShadowColor
     }
 
-    /// The default theme matching ``Color/Neumorphic``.
+    /// The default theme matching `Color.Neumorphic`.
     public static let standard = NeumorphicTheme(
         mainColor: .Neumorphic.main,
         secondaryColor: .Neumorphic.secondary,
@@ -38,11 +38,17 @@ public struct NeumorphicTheme: @unchecked Sendable {
 
 /// Tunable shadow parameters for balancing depth and rendering cost.
 public struct NeumorphicShadowPreset: @unchecked Sendable {
+    private enum ColorSource: Sendable {
+        case explicit
+        case theme(opacity: Double)
+    }
+
     public let darkShadowColor: Color
     public let lightShadowColor: Color
     public let offset: CGFloat
     public let radius: CGFloat
     public let spread: CGFloat
+    private let colorSource: ColorSource
 
     public init(
         darkShadowColor: Color,
@@ -56,11 +62,13 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
         self.offset = max(offset, 0)
         self.radius = max(radius, 0)
         self.spread = min(max(spread, 0), 1)
+        self.colorSource = .explicit
     }
 
     public static let standard = NeumorphicShadowPreset(
         darkShadowColor: .Neumorphic.darkShadow,
-        lightShadowColor: .Neumorphic.lightShadow
+        lightShadowColor: .Neumorphic.lightShadow,
+        colorSource: .theme(opacity: 1)
     )
 
     /// A lower-cost preset for dense scrolling content.
@@ -69,7 +77,8 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
         lightShadowColor: .Neumorphic.lightShadow.opacity(0.65),
         offset: 3,
         radius: 2,
-        spread: 0.35
+        spread: 0.35,
+        colorSource: .theme(opacity: 0.65)
     )
 
     /// Removes shadow layers while retaining the surface itself.
@@ -80,6 +89,34 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
         radius: 0,
         spread: 0
     )
+
+    private init(
+        darkShadowColor: Color,
+        lightShadowColor: Color,
+        offset: CGFloat = 6,
+        radius: CGFloat = 3,
+        spread: CGFloat = 0.5,
+        colorSource: ColorSource
+    ) {
+        self.darkShadowColor = darkShadowColor
+        self.lightShadowColor = lightShadowColor
+        self.offset = max(offset, 0)
+        self.radius = max(radius, 0)
+        self.spread = min(max(spread, 0), 1)
+        self.colorSource = colorSource
+    }
+
+    func resolvedShadowColors(for theme: NeumorphicTheme) -> (dark: Color, light: Color) {
+        switch colorSource {
+        case .explicit:
+            return (darkShadowColor, lightShadowColor)
+        case .theme(let opacity):
+            return (
+                theme.darkShadowColor.opacity(opacity),
+                theme.lightShadowColor.opacity(opacity)
+            )
+        }
+    }
 }
 
 private struct NeumorphicThemeKey: EnvironmentKey {
@@ -87,7 +124,7 @@ private struct NeumorphicThemeKey: EnvironmentKey {
 }
 
 public extension EnvironmentValues {
-    /// The theme used by the explicit `neumorphicThemed*` modifiers.
+    /// The theme used by Neumorphic controls and explicit themed modifiers.
     var neumorphicTheme: NeumorphicTheme {
         get { self[NeumorphicThemeKey.self] }
         set { self[NeumorphicThemeKey.self] = newValue }
@@ -95,7 +132,7 @@ public extension EnvironmentValues {
 }
 
 public extension View {
-    /// Provides a theme to Neumorphic themed modifiers below this view.
+    /// Provides a theme to Neumorphic controls and themed modifiers below this view.
     func neumorphicTheme(_ theme: NeumorphicTheme) -> some View {
         environment(\.neumorphicTheme, theme)
     }

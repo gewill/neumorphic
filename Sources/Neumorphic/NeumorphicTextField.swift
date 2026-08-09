@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A text field with a soft inset surface and focus treatment.
 public struct NeumorphicTextField: View {
+    @Environment(\.neumorphicTheme) private var theme
     private let title: String
     @Binding private var text: String
     private let isSecure: Bool
@@ -19,7 +20,17 @@ public struct NeumorphicTextField: View {
         .textFieldStyle(PlainTextFieldStyle())
         .padding(.horizontal, 16)
         .frame(minHeight: 44)
-        .foregroundColor(Color.Neumorphic.secondary)
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color.Neumorphic.main).softInnerShadow(RoundedRectangle(cornerRadius: 12), spread: 0.55, radius: 3))
+        .foregroundColor(theme.secondaryColor)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(theme.mainColor)
+                .softInnerShadow(
+                    RoundedRectangle(cornerRadius: 12),
+                    darkShadow: theme.darkShadowColor,
+                    lightShadow: theme.lightShadowColor,
+                    spread: 0.55,
+                    radius: 3
+                )
+        )
     }
 }
