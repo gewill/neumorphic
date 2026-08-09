@@ -7,10 +7,10 @@
 import SwiftUI
 
 private struct SoftOuterShadowViewModifier: ViewModifier {
-    var lightShadowColor : Color
-    var darkShadowColor : Color
+    var lightShadowColor: Color
+    var darkShadowColor: Color
     var offset: CGFloat
-    var radius : CGFloat
+    var radius: CGFloat
 
     init(darkShadowColor: Color, lightShadowColor: Color, offset: CGFloat, radius: CGFloat) {
         self.darkShadowColor = darkShadowColor
@@ -21,8 +21,8 @@ private struct SoftOuterShadowViewModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-        .shadow(color: darkShadowColor, radius: radius, x: offset, y: offset)
-        .shadow(color: lightShadowColor, radius: radius, x: -offset, y: -offset)
+            .shadow(color: darkShadowColor, radius: radius, x: offset, y: offset)
+            .shadow(color: lightShadowColor, radius: radius, x: -offset, y: -offset)
     }
 
 }
@@ -30,8 +30,13 @@ private struct SoftOuterShadowViewModifier: ViewModifier {
 extension View {
 
     /// Applies a soft outer shadow to the view.
-public func softOuterShadow(darkShadow: Color = Color.Neumorphic.darkShadow, lightShadow: Color = Color.Neumorphic.lightShadow, offset: CGFloat = 6, radius:CGFloat = 3) -> some View {
-        modifier(SoftOuterShadowViewModifier(darkShadowColor: darkShadow, lightShadowColor: lightShadow, offset: offset, radius: radius))
+    public func softOuterShadow(
+        darkShadow: Color = Color.Neumorphic.darkShadow, lightShadow: Color = Color.Neumorphic.lightShadow,
+        offset: CGFloat = 6, radius: CGFloat = 3
+    ) -> some View {
+        modifier(
+            SoftOuterShadowViewModifier(
+                darkShadowColor: darkShadow, lightShadowColor: lightShadow, offset: offset, radius: radius))
     }
 
     /// Applies an outer shadow using a reusable performance preset.
