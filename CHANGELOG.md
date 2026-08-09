@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Raised the declared minimum Swift toolchain to Swift 5.7 so it matches the language features used by the package.
+- Extended environment themes and deployment-target accessibility semantics across the built-in controls.
+
+### Fixed
+
+- Corrected Slider step anchoring, editing callbacks, adjustable actions, and interaction height.
+- Aligned determinate Progress visuals with VoiceOver values and added Reduce Motion-aware indeterminate animation.
+- Preserved custom switch shadow colors and card outer shadows.
+
+### Documentation
+
+- Included the DocC catalog in the package and documented the 2.1 controls, themes, and accessibility behavior.
+
+### Tooling
+
+- Expanded CI to validate release tags, Swift formatting, the macOS 10.15 deployment target, DocC, and API compatibility against v2.1.0.
+- Pinned the checkout action and enabled grouped monthly Dependabot updates for GitHub Actions.
+
 ## 2.1.0 - 2026-08-09
 
 ### Added
