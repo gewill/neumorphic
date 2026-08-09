@@ -4,9 +4,32 @@ struct ContentView: View {
     var body: some View {
         TabView {
             ExampleShowcaseView()
-                .tabItem { Label("Examples", systemImage: "square.grid.2x2") }
+                .tabItem {
+                    ExampleTabLabel("Examples", systemImage: "square.grid.2x2")
+                }
             ExampleSettingsView()
-                .tabItem { Label("Settings", systemImage: "gearshape") }
+                .tabItem {
+                    ExampleTabLabel("Settings", systemImage: "gearshape")
+                }
+        }
+    }
+}
+
+private struct ExampleTabLabel: View {
+    let title: String
+    let systemImage: String
+
+    init(_ title: String, systemImage: String) {
+        self.title = title
+        self.systemImage = systemImage
+    }
+
+    @ViewBuilder
+    var body: some View {
+        if #available(iOS 14.0, macOS 11.0, *) {
+            Label(title, systemImage: systemImage)
+        } else {
+            Text(title)
         }
     }
 }
