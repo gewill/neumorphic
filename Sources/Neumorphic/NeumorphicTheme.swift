@@ -68,6 +68,8 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
 
     /// Creates a shadow preset with explicit colors and geometry.
     ///
+    /// Custom presets retain these colors when a different environment theme is applied.
+    ///
     /// - Parameters:
     ///   - darkShadowColor: The darker color used by the shadow.
     ///   - lightShadowColor: The lighter color used by the shadow.
@@ -89,14 +91,14 @@ public struct NeumorphicShadowPreset: @unchecked Sendable {
         self.colorSource = .explicit
     }
 
-    /// The standard shadow geometry and default Neumorphic shadow colors.
+    /// The standard shadow geometry, resolving its colors from the current environment theme when applied as a preset.
     public static let standard = NeumorphicShadowPreset(
         darkShadowColor: .Neumorphic.darkShadow,
         lightShadowColor: .Neumorphic.lightShadow,
         colorSource: .theme(opacity: 1)
     )
 
-    /// A lower-cost preset for dense scrolling content.
+    /// A lower-cost preset for dense scrolling content, resolving its colors from the current environment theme.
     public static let subtle = NeumorphicShadowPreset(
         darkShadowColor: .Neumorphic.darkShadow.opacity(0.65),
         lightShadowColor: .Neumorphic.lightShadow.opacity(0.65),

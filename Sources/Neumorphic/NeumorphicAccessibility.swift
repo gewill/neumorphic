@@ -2,22 +2,22 @@ import SwiftUI
 
 extension View {
     func neumorphicSliderAccessibility(
-        label: String, value: String, adjust: @escaping (AccessibilityAdjustmentDirection) -> Void
+        label: Text, value: String, adjust: @escaping (AccessibilityAdjustmentDirection) -> Void
     ) -> some View {
         accessibilityElement(children: .ignore)
-            .accessibility(label: Text(LocalizedStringKey(label)))
+            .accessibility(label: label)
             .accessibility(value: Text(verbatim: value))
             .accessibilityAdjustableAction(adjust)
     }
 
-    func neumorphicProgressAccessibility(label: String, value: Text) -> some View {
+    func neumorphicProgressAccessibility(label: Text, value: Text) -> some View {
         accessibilityElement(children: .ignore)
-            .accessibility(label: Text(LocalizedStringKey(label)))
+            .accessibility(label: label)
             .accessibility(value: value)
     }
 
     func neumorphicSelectionAccessibility(label: String, selected: Bool) -> some View {
-        accessibility(label: Text(LocalizedStringKey(label)))
+        accessibility(label: Text(verbatim: label))
             .accessibility(
                 value: Text(LocalizedStringKey(selected ? "Selected" : "Not selected"))
             )
@@ -27,11 +27,11 @@ extension View {
     func neumorphicButtonAccessibility(label: String, hint: String? = nil) -> some View {
         if let hint = hint {
             neumorphicButtonAccessibility(
-                label: Text(LocalizedStringKey(label)),
+                label: Text(verbatim: label),
                 hint: Text(LocalizedStringKey(hint))
             )
         } else {
-            neumorphicButtonAccessibility(label: Text(LocalizedStringKey(label)))
+            neumorphicButtonAccessibility(label: Text(verbatim: label))
         }
     }
 

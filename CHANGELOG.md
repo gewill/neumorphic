@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+### Breaking
+
+- The minimum Swift tools version is now 5.7 (from 5.3). Xcode 13 and earlier must remain on the 2.1.x release line; publish this change as the next minor release.
+
 ### Changed
 
-- Raised the declared minimum Swift toolchain to Swift 5.7 so it matches the language features used by the package.
 - Extended environment themes and deployment-target accessibility semantics across the built-in controls.
 
 ### Fixed
@@ -21,7 +24,7 @@
 
 ### Tooling
 
-- Expanded CI to validate release tags, Swift formatting, the macOS 10.15 deployment target, DocC, and API compatibility against v2.1.0.
+- Expanded CI to validate release tags, Swift formatting, the macOS 10.15 deployment target, DocC, and API compatibility against the latest preceding release tag.
 - Pinned the checkout action and enabled grouped monthly Dependabot updates for GitHub Actions.
 - Removed the obsolete manual XCTest list in favor of automatic test discovery.
 

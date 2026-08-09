@@ -71,6 +71,10 @@ NeumorphicCircularProgressView(value: 0.65)
 - ``NeumorphicLink``
 - ``NeumorphicCircularProgressView``
 
+### View Modifiers
+
+The package provides `softOuterShadow`, `softInnerShadow`, and `neumorphicCard`, plus `neumorphicTheme` and themed button, toggle, and switch styles. Focus, hover, and switch behavior are available through `neumorphicFocusRing`, `neumorphicHover`, and `switchToggleStyle`.
+
 ### Appearance
 
 - ``NeumorphicKit``

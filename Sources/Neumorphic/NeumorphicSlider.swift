@@ -1,3 +1,5 @@
+import Combine
+import Foundation
 import SwiftUI
 
 /// A neumorphic slider with an inset track and raised thumb.
@@ -5,16 +7,44 @@ public struct NeumorphicSlider: View {
     @Environment(\.neumorphicTheme) private var theme
     @Binding private var value: Double
     @State private var editingSession = NeumorphicSliderEditingSession()
+    @GestureState private var isDragging = false
     private let bounds: ClosedRange<Double>
     private let step: Double
     private let tint: Color
-    private let accessibilityLabel: String
+    private let accessibilityLabel: Text
     private let onEditingChanged: (Bool) -> Void
 
     /// Creates a slider bound to a value within the supplied range.
     public init(
         value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double = 0, tint: Color = .accentColor,
+        onEditingChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self.init(
+            value: value,
+            in: bounds,
+            step: step,
+            tint: tint,
+            accessibilityLabel: Text(LocalizedStringKey("Slider")),
+            onEditingChanged: onEditingChanged
+        )
+    }
+
+    /// Creates a slider with an explicit accessibility label.
+    public init(
+        value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double = 0, tint: Color = .accentColor,
         accessibilityLabel: String = "Slider", onEditingChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self._value = value
+        self.bounds = bounds
+        self.step = max(step, 0)
+        self.tint = tint
+        self.accessibilityLabel = Text(verbatim: accessibilityLabel)
+        self.onEditingChanged = onEditingChanged
+    }
+
+    private init(
+        value: Binding<Double>, in bounds: ClosedRange<Double>, step: Double, tint: Color,
+        accessibilityLabel: Text, onEditingChanged: @escaping (Bool) -> Void
     ) {
         self._value = value
         self.bounds = bounds
@@ -48,25 +78,34 @@ public struct NeumorphicSlider: View {
                         radius: 2
                     )
                     .overlay(Circle().fill(tint).frame(width: 10, height: 10))
-                    .offset(x: max(0, min(width - 28, width * progress - 14)))
+                    .offset(x: max(width - 28, 0) * progress)
             }
             .frame(height: 28)
             .frame(maxHeight: .infinity)
             .contentShape(Rectangle())
             .gesture(
-                DragGesture(minimumDistance: 0).onChanged { gesture in
-                    if editingSession.begin() {
-                        onEditingChanged(true)
+                DragGesture(minimumDistance: 0)
+                    .updating($isDragging) { _, state, _ in
+                        state = true
                     }
-                    updateValue(at: gesture.location.x, width: width)
-                }.onEnded { _ in
-                    if editingSession.end() {
-                        onEditingChanged(false)
+                    .onChanged { gesture in
+                        updateValue(at: gesture.location.x, width: width)
                     }
-                })
+                    .onEnded { _ in
+                        endEditing()
+                    }
+            )
         }
-        .frame(minHeight: 44)
-        .neumorphicSliderAccessibility(label: accessibilityLabel, value: String(format: "%.2f", value)) {
+        .frame(height: 44)
+        .onReceive(Just(isDragging).removeDuplicates()) { isDragging in
+            if isDragging {
+                beginEditing()
+            } else {
+                endEditing()
+            }
+        }
+        .onDisappear(perform: endEditing)
+        .neumorphicSliderAccessibility(label: accessibilityLabel, value: accessibilityValue) {
             direction in
             adjustValue(for: direction)
         }
@@ -84,18 +123,33 @@ public struct NeumorphicSlider: View {
     }
 
     private var normalizedValue: CGFloat {
-        guard bounds.upperBound > bounds.lowerBound else { return 0 }
-        return CGFloat(
-            (min(max(value, bounds.lowerBound), bounds.upperBound) - bounds.lowerBound)
-                / (bounds.upperBound - bounds.lowerBound))
+        CGFloat(NeumorphicSliderMath.normalizedFraction(value: value, in: bounds))
+    }
+
+    private var accessibilityValue: String {
+        NeumorphicSliderMath.percentString(
+            NeumorphicSliderMath.normalizedFraction(value: value, in: bounds)
+        )
     }
 
     private func updateValue(at x: CGFloat, width: CGFloat) {
         value = NeumorphicSliderMath.value(
-            at: Double(min(max(x / width, 0), 1)),
+            at: NeumorphicSliderMath.fraction(at: Double(x), width: Double(width)),
             in: bounds,
             step: step
         )
+    }
+
+    private func beginEditing() {
+        if editingSession.begin() {
+            onEditingChanged(true)
+        }
+    }
+
+    private func endEditing() {
+        if editingSession.end() {
+            onEditingChanged(false)
+        }
     }
 
     private func adjustValue(for direction: AccessibilityAdjustmentDirection) {
@@ -181,7 +235,31 @@ struct NeumorphicSliderEditingSession {
 }
 
 enum NeumorphicSliderMath {
+    static func normalizedFraction(value: Double, in bounds: ClosedRange<Double>) -> Double {
+        guard value.isFinite, bounds.lowerBound.isFinite, bounds.upperBound.isFinite,
+            bounds.upperBound > bounds.lowerBound
+        else { return 0 }
+        return min(max((value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound), 0), 1)
+    }
+
+    static func fraction(at x: Double, width: Double, thumbWidth: Double = 28) -> Double {
+        guard x.isFinite, width.isFinite, width > 0, thumbWidth.isFinite, thumbWidth >= 0 else { return 0 }
+        let travel = max(width - thumbWidth, 1)
+        return min(max((x - thumbWidth / 2) / travel, 0), 1)
+    }
+
+    static func percentString(_ fraction: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
+        formatter.minimumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: min(max(fraction, 0), 1))) ?? "0%"
+    }
+
     static func value(at fraction: Double, in bounds: ClosedRange<Double>, step: Double) -> Double {
+        guard fraction.isFinite, bounds.lowerBound.isFinite, bounds.upperBound.isFinite,
+            bounds.upperBound >= bounds.lowerBound
+        else { return bounds.lowerBound.isFinite ? bounds.lowerBound : 0 }
         let clampedFraction = min(max(fraction, 0), 1)
         let rawValue = bounds.lowerBound + (bounds.upperBound - bounds.lowerBound) * clampedFraction
         return snappedValue(rawValue, in: bounds, step: step)
@@ -193,6 +271,9 @@ enum NeumorphicSliderMath {
         step: Double,
         incrementing: Bool
     ) -> Double {
+        guard value.isFinite, bounds.lowerBound.isFinite, bounds.upperBound.isFinite,
+            bounds.upperBound >= bounds.lowerBound
+        else { return bounds.lowerBound.isFinite ? bounds.lowerBound : 0 }
         let clampedValue = min(max(value, bounds.lowerBound), bounds.upperBound)
         guard step.isFinite, step > 0 else {
             let delta = (bounds.upperBound - bounds.lowerBound) / 20
@@ -224,6 +305,9 @@ enum NeumorphicSliderMath {
         in bounds: ClosedRange<Double>,
         step: Double
     ) -> Double {
+        guard value.isFinite, bounds.lowerBound.isFinite, bounds.upperBound.isFinite,
+            bounds.upperBound >= bounds.lowerBound
+        else { return bounds.lowerBound.isFinite ? bounds.lowerBound : 0 }
         let clampedValue = min(max(value, bounds.lowerBound), bounds.upperBound)
         guard step.isFinite, step > 0 else { return clampedValue }
         let stepCount = ((clampedValue - bounds.lowerBound) / step).rounded()

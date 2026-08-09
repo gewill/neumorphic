@@ -27,12 +27,12 @@
 
 - 位置：`Tests/NeumorphicTests/NeumorphicTests.swift:5`
 - 原占位测试已替换为颜色模式往返、默认颜色解析和控件行为测试。
-- 已移除旧的 `Tests/LinuxMain.swift` 与 `XCTestManifests.swift`，改用自动发现；当前 `swift test` 执行 17 个测试，全部通过，覆盖公共样式入口、disabled 状态、负几何参数、Slider 步进与编辑会话、Progress 边界归一化，以及选择和展开状态变化。
+- 已移除旧的 `Tests/LinuxMain.swift`、`XCTestManifests.swift` 和手工 `allTests` 列表，改用自动发现；当前 `swift test` 执行 17 个测试，全部通过，覆盖公共样式入口、disabled 状态、负几何参数、Slider 步进/映射/编辑会话与非有限值，以及 Progress 边界归一化。
 
 ### 3. 缺少 CI。**状态：已完成。**
 
 - `.github/workflows/ci.yml` 已包含严格格式检查、macOS `swift test`、macOS 10.15 和 iOS 13 SDK 构建。
-- 已补充 Swift 6 严格检查、DocC 编译和基于 `v2.1.0` 的 API 兼容性门禁，并在 `v*` tag push 时运行。
+- 已补充 Swift 6 严格检查、DocC 编译和基于最近发布 tag 的 API 兼容性门禁，并在 `v*` tag push 时运行。
 
 ## P1：高优先级兼容性问题
 

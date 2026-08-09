@@ -23,7 +23,7 @@ public struct NeumorphicDisclosureGroup<Content: View>: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Button {
-                NeumorphicControlAction.toggle(_isExpanded)
+                isExpanded.toggle()
             } label: {
                 HStack {
                     Text(title).font(.headline)
@@ -46,12 +46,7 @@ public struct NeumorphicDisclosureGroup<Content: View>: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(theme.mainColor)
-                .softOuterShadow(
-                    darkShadow: theme.darkShadowColor.opacity(0.65),
-                    lightShadow: theme.lightShadowColor.opacity(0.65),
-                    offset: 3,
-                    radius: 2
-                )
+                .softOuterShadow(.subtle)
         )
     }
 }

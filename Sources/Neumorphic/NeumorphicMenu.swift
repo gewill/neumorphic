@@ -31,7 +31,7 @@ public struct NeumorphicMenu<Selection: Hashable>: View {
         Menu {
             ForEach(options, id: \.self) { option in
                 Button {
-                    NeumorphicControlAction.select(option, selection: _selection)
+                    selection = option
                 } label: {
                     Text(label(option))
                 }

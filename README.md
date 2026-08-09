@@ -16,6 +16,8 @@ Requirements
 - iOS 13.0+
 - macOS 10.15+
 
+The upcoming release line requires Swift 5.7 / Xcode 14 or newer. Keep using the 2.1.x release line with Xcode 13 or earlier.
+
 #### Swift Package Manager 
 1. In Xcode, open your project and navigate to File → Swift Packages → Add Package Dependency.
 2. Paste the repository URL (https://github.com/gewill/neumorphic.git) and click Next.

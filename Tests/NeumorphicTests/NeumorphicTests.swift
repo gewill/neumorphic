@@ -184,6 +184,23 @@ final class NeumorphicTests: XCTestCase {
         XCTAssertFalse(session.end())
     }
 
+    func testSliderDragMappingCompensatesThumbWidth() {
+        XCTAssertEqual(NeumorphicSliderMath.fraction(at: 14, width: 100), 0)
+        XCTAssertEqual(NeumorphicSliderMath.fraction(at: 50, width: 100), 0.5, accuracy: 0.001)
+        XCTAssertEqual(NeumorphicSliderMath.fraction(at: 86, width: 100), 1)
+    }
+
+    func testSliderMathRejectsNonFiniteValues() {
+        let bounds = 5.0...10.0
+
+        XCTAssertEqual(NeumorphicSliderMath.value(at: .nan, in: bounds, step: 1), 5)
+        XCTAssertEqual(
+            NeumorphicSliderMath.adjustedValue(.nan, in: bounds, step: 1, incrementing: true),
+            5
+        )
+        XCTAssertTrue(NeumorphicSliderMath.percentString(0.65).contains("65"))
+    }
+
     func testProgressFractionClampsVisualAndAccessibilityValue() {
         XCTAssertEqual(NeumorphicProgressMath.normalizedFraction(value: -1, total: 10), 0)
         XCTAssertEqual(NeumorphicProgressMath.normalizedFraction(value: 5, total: 10), 0.5)
@@ -191,28 +208,6 @@ final class NeumorphicTests: XCTestCase {
         XCTAssertEqual(NeumorphicProgressMath.normalizedFraction(value: 5, total: 0), 0)
         XCTAssertEqual(NeumorphicProgressMath.normalizedFraction(value: .infinity, total: 10), 0)
         XCTAssertNil(NeumorphicProgressMath.normalizedFraction(value: nil, total: 10))
-    }
-
-    func testPickerMenuAndRadioSelectionActionsUpdateBinding() {
-        var selection = "One"
-        let binding = Binding(get: { selection }, set: { selection = $0 })
-
-        NeumorphicControlAction.select("Two", selection: binding)
-        XCTAssertEqual(selection, "Two")
-
-        NeumorphicControlAction.select("Radio", selection: binding)
-        XCTAssertEqual(selection, "Radio")
-    }
-
-    func testCheckboxAndDisclosureActionsToggleBinding() {
-        var isOn = false
-        let binding = Binding(get: { isOn }, set: { isOn = $0 })
-
-        NeumorphicControlAction.toggle(binding)
-        XCTAssertTrue(isOn)
-
-        NeumorphicControlAction.toggle(binding)
-        XCTAssertFalse(isOn)
     }
 
     private func isColorScheme(

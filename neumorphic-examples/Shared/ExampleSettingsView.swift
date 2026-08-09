@@ -13,7 +13,7 @@ struct ExampleSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.Neumorphic.main.edgesIgnoringSafeArea(.all)
+            Color.Neumorphic.main.ignoresSafeArea()
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     Text("Settings & States")
@@ -52,7 +52,7 @@ struct ExampleSettingsView: View {
                     }
                     SettingsSection("Style Entry Points") {
                         AdaptiveStack(minimumHorizontalWidth: 360) {
-                            Button(action: {}) { ExampleSymbol(systemName: "star.fill", fallback: "★") }
+                            Button(action: {}) { ExampleSymbol(systemName: "star.fill") }
                                 .buttonStyle(
                                     FixedSizeSoftDynamicButtonStyle(
                                         Circle(),
@@ -215,7 +215,7 @@ private struct MotionPreview: View {
         VStack(alignment: .leading, spacing: 8) {
             Button(action: togglePreview) {
                 VStack(spacing: 8) {
-                    ExampleSymbol(systemName: "sparkles", fallback: "✦")
+                    ExampleSymbol(systemName: "sparkles")
                         .font(.title)
                         .rotationEffect(.degrees(isActive ? 180 : 0))
                         .scaleEffect(isActive ? 1.35 : 0.85)

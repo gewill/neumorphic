@@ -7,7 +7,7 @@ public struct NeumorphicCircularProgressView: View {
     private let total: Double
     private let tint: Color
     private let diameter: CGFloat
-    private let accessibilityLabel: String
+    private let accessibilityLabel: Text
 
     /// Creates a circular progress indicator.
     ///
@@ -16,11 +16,31 @@ public struct NeumorphicCircularProgressView: View {
     ///   - total: The amount that represents completion. Negative values are normalized to zero.
     ///   - tint: The color of the progress arc.
     ///   - diameter: The indicator diameter. Values below 24 points are normalized to 24.
-    ///   - accessibilityLabel: The label VoiceOver uses for the indicator.
+    public init(
+        value: Double?, total: Double = 1, tint: Color = .accentColor, diameter: CGFloat = 52,
+    ) {
+        self.init(
+            value: value,
+            total: total,
+            tint: tint,
+            diameter: diameter,
+            accessibilityLabel: Text(LocalizedStringKey("Progress"))
+        )
+    }
+
+    /// Creates a circular progress indicator with an explicit accessibility label.
     public init(
         value: Double?, total: Double = 1, tint: Color = .accentColor, diameter: CGFloat = 52,
         accessibilityLabel: String = "Progress"
     ) {
+        self.value = value
+        self.total = max(total, 0)
+        self.tint = tint
+        self.diameter = max(diameter, 24)
+        self.accessibilityLabel = Text(verbatim: accessibilityLabel)
+    }
+
+    private init(value: Double?, total: Double, tint: Color, diameter: CGFloat, accessibilityLabel: Text) {
         self.value = value
         self.total = max(total, 0)
         self.tint = tint

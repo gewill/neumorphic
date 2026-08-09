@@ -27,7 +27,7 @@ public struct NeumorphicPicker<Selection: Hashable>: View {
         HStack(spacing: 8) {
             ForEach(options, id: \.self) { option in
                 Button {
-                    NeumorphicControlAction.select(option, selection: _selection)
+                    selection = option
                 } label: {
                     Text(label(option)).font(.subheadline.weight(.medium)).multilineTextAlignment(.center).frame(
                         maxWidth: .infinity, minHeight: 44)

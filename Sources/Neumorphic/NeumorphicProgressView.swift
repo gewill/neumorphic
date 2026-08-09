@@ -7,7 +7,7 @@ public struct NeumorphicProgressView: View {
     private let total: Double
     private let tint: Color
     private let height: CGFloat
-    private let accessibilityLabel: String
+    private let accessibilityLabel: Text
 
     /// Creates a linear progress indicator.
     ///
@@ -16,11 +16,31 @@ public struct NeumorphicProgressView: View {
     ///   - total: The amount that represents completion. Negative values are normalized to zero.
     ///   - tint: The color of the progress fill.
     ///   - height: The track height. Values below 2 points are normalized to 2.
-    ///   - accessibilityLabel: The label VoiceOver uses for the indicator.
+    public init(
+        value: Double?, total: Double = 1, tint: Color = .accentColor, height: CGFloat = 10,
+    ) {
+        self.init(
+            value: value,
+            total: total,
+            tint: tint,
+            height: height,
+            accessibilityLabel: Text(LocalizedStringKey("Progress"))
+        )
+    }
+
+    /// Creates a linear progress indicator with an explicit accessibility label.
     public init(
         value: Double?, total: Double = 1, tint: Color = .accentColor, height: CGFloat = 10,
         accessibilityLabel: String = "Progress"
     ) {
+        self.value = value
+        self.total = max(total, 0)
+        self.tint = tint
+        self.height = max(height, 2)
+        self.accessibilityLabel = Text(verbatim: accessibilityLabel)
+    }
+
+    private init(value: Double?, total: Double, tint: Color, height: CGFloat, accessibilityLabel: Text) {
         self.value = value
         self.total = max(total, 0)
         self.tint = tint

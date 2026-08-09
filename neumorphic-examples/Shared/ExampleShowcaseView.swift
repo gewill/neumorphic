@@ -9,7 +9,7 @@ import SwiftUI
 struct ExampleShowcaseView: View {
     var body: some View {
         ZStack {
-            Color.Neumorphic.main.edgesIgnoringSafeArea(.all)
+            Color.Neumorphic.main.ignoresSafeArea()
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     Text("Neumorphic Examples")
@@ -112,24 +112,16 @@ private struct DemoNavigationControlsView: View {
             DemoLabeledControl("DatePicker") {
                 NeumorphicDatePicker("Start", selection: $date, displayedComponents: .date)
             }
-            if #available(iOS 14.0, macOS 11.0, *) {
-                DemoLabeledControl("Menu") {
-                    NeumorphicMenu("Mode", selection: $mode, options: ["Light", "Dark"])
-                }
-            } else {
-                DemoLabeledControl("Menu") { Text("Requires iOS 14 or macOS 11") }
+            DemoLabeledControl("Menu") {
+                NeumorphicMenu("Mode", selection: $mode, options: ["Light", "Dark"])
             }
             NeumorphicDisclosureGroup("Details", isExpanded: $expanded) {
                 Text("Expandable content")
                     .foregroundColor(Color.Neumorphic.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            if #available(iOS 14.0, macOS 11.0, *) {
-                DemoLabeledControl("Link") {
-                    NeumorphicLink("Website", destination: URL(string: "https://example.com")!)
-                }
-            } else {
-                DemoLabeledControl("Link") { Text("Requires iOS 14 or macOS 11") }
+            DemoLabeledControl("Link") {
+                NeumorphicLink("Website", destination: URL(string: "https://example.com")!)
             }
         }
     }
@@ -257,13 +249,13 @@ private struct DemoButtonsView: View {
                         .buttonStyle(exampleButtonStyle(Ellipse()))
                 }
                 DemoLabeledControl("Circle") {
-                    Button(action: {}) { ExampleSymbol(systemName: "heart.fill", fallback: "♥") }
+                    Button(action: {}) { ExampleSymbol(systemName: "heart.fill") }
                         .buttonStyle(exampleButtonStyle(Circle()))
                 }
             }
             AdaptiveStack {
                 DemoLabeledControl("Custom Color") {
-                    Button(action: {}) { ExampleSymbol(systemName: "heart.fill", fallback: "♥") }
+                    Button(action: {}) { ExampleSymbol(systemName: "heart.fill") }
                         .buttonStyle(exampleButtonStyle(Circle(), mainColor: .red, textColor: .white))
                 }
                 DemoLabeledControl("Custom Size") {
@@ -367,14 +359,14 @@ private struct DemoTogglesView: View {
                 }
                 DemoLabeledControl("Circle") {
                     Toggle(isOn: $isOn) {
-                        ExampleSymbol(systemName: isOn ? "stop.fill" : "play.fill", fallback: isOn ? "■" : "▶︎")
+                        ExampleSymbol(systemName: isOn ? "stop.fill" : "play.fill")
                     }
                     .toggleStyle(exampleToggleStyle(Circle(), padding: 20))
                 }
             }
             DemoLabeledControl("Circle Flat") {
                 Toggle(isOn: $isOn) {
-                    ExampleSymbol(systemName: isOn ? "stop.fill" : "play.fill", fallback: isOn ? "■" : "▶︎")
+                    ExampleSymbol(systemName: isOn ? "stop.fill" : "play.fill")
                 }
                 .toggleStyle(exampleToggleStyle(Circle(), padding: 20, pressedEffect: .flat))
             }
@@ -508,30 +500,15 @@ private func exampleToggleStyle<S: Shape>(
 
 struct ExampleSymbol: View {
     let systemName: String
-    let fallback: String
 
-    @ViewBuilder
     var body: some View {
-        #if os(macOS)
-            if #available(macOS 11.0, *) {
-                Image(systemName: systemName)
-            } else {
-                Text(fallback)
-            }
-        #else
-            Image(systemName: systemName)
-        #endif
+        Image(systemName: systemName)
     }
 }
 
 extension View {
-    @ViewBuilder
     func exampleHeaderTrait() -> some View {
-        if #available(iOS 14.0, macOS 11.0, *) {
-            accessibilityAddTraits(.isHeader)
-        } else {
-            accessibility(addTraits: .isHeader)
-        }
+        accessibilityAddTraits(.isHeader)
     }
 }
 

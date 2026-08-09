@@ -19,7 +19,7 @@ public struct NeumorphicCheckbox: View {
     /// The rendered checkbox.
     public var body: some View {
         Button {
-            NeumorphicControlAction.toggle(_isOn)
+            isOn.toggle()
         } label: {
             HStack(spacing: 10) {
                 RoundedRectangle(cornerRadius: 6).fill(theme.mainColor).frame(width: 28, height: 28)
@@ -62,7 +62,7 @@ public struct NeumorphicRadio<Value: Hashable>: View {
     /// The rendered radio button.
     public var body: some View {
         Button {
-            NeumorphicControlAction.select(value, selection: _selection)
+            selection = value
         } label: {
             HStack(spacing: 10) {
                 Circle().fill(theme.mainColor).frame(width: 28, height: 28)

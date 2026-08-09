@@ -24,13 +24,8 @@ private struct ExampleTabLabel: View {
         self.systemImage = systemImage
     }
 
-    @ViewBuilder
     var body: some View {
-        if #available(iOS 14.0, macOS 11.0, *) {
-            Label(title, systemImage: systemImage)
-        } else {
-            Text(title)
-        }
+        Label(title, systemImage: systemImage)
     }
 }
 

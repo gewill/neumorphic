@@ -105,6 +105,23 @@ private struct SoftInnerShadowViewModifier<S: Shape>: ViewModifier {
     }
 }
 
+private struct SoftInnerShadowPresetViewModifier<S: Shape>: ViewModifier {
+    @Environment(\.neumorphicTheme) private var theme
+    let shape: S
+    let preset: NeumorphicShadowPreset
+
+    func body(content: Content) -> some View {
+        let colors = preset.resolvedShadowColors(for: theme)
+        content.softInnerShadow(
+            shape,
+            darkShadow: colors.dark,
+            lightShadow: colors.light,
+            spread: preset.spread,
+            radius: preset.radius
+        )
+    }
+}
+
 //For more readable, we extend the View and create a softInnerShadow function.
 extension View {
 
@@ -122,13 +139,7 @@ extension View {
 
     /// Applies an inner shadow using a reusable performance preset.
     public func softInnerShadow<S: Shape>(_ content: S, preset: NeumorphicShadowPreset) -> some View {
-        softInnerShadow(
-            content,
-            darkShadow: preset.darkShadowColor,
-            lightShadow: preset.lightShadowColor,
-            spread: preset.spread,
-            radius: preset.radius
-        )
+        modifier(SoftInnerShadowPresetViewModifier(shape: content, preset: preset))
     }
 
 }

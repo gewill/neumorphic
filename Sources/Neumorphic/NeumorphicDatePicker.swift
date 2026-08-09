@@ -40,12 +40,7 @@ public struct NeumorphicDatePicker: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(theme.mainColor)
-                .softOuterShadow(
-                    darkShadow: theme.darkShadowColor.opacity(0.65),
-                    lightShadow: theme.lightShadowColor.opacity(0.65),
-                    offset: 3,
-                    radius: 2
-                )
+                .softOuterShadow(.subtle)
         )
     }
 }
