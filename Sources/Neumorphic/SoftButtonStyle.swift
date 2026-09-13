@@ -26,8 +26,12 @@ public struct SoftDynamicButtonStyle<S: Shape>: ButtonStyle {
     var lightShadowColor: Color
     var pressedEffect: SoftButtonPressedEffect
     var padding: CGFloat
+    var minimumSize: CGSize?
 
-    /// Creates a dynamic soft button style.
+    /// Creates a dynamic soft button style with a platform-specific minimum layout.
+    ///
+    /// Reserves at least 28-by-28 points on macOS and 44-by-44 points on iOS.
+    /// The complete layout rectangle is hittable, including transparent margins.
     ///
     /// - Parameters:
     ///   - shape: The shape of the surface.
@@ -50,12 +54,37 @@ public struct SoftDynamicButtonStyle<S: Shape>: ButtonStyle {
         self.padding = padding
     }
 
+    /// Creates a dynamic soft button style with explicit layout and hit bounds.
+    ///
+    /// The complete layout rectangle is hittable, including transparent margins, and stays
+    /// unchanged during presses. Shadows may draw outside it. See <doc:ButtonSizing>.
+    ///
+    /// - Parameters:
+    ///   - shape: The shape of the surface.
+    ///   - mainColor: The surface color.
+    ///   - textColor: The label and symbol color.
+    ///   - darkShadowColor: The shadow color applied toward the lower-right edge.
+    ///   - lightShadowColor: The highlight color applied toward the upper-left edge.
+    ///   - pressedEffect: The visual treatment applied while the control is pressed.
+    ///   - padding: The inset between the label and the surface edge.
+    ///   - minimumSize: The minimum complete layout and rectangular hit size, in points.
+    ///     Use `.zero` for no minimum. Negative or nonfinite components become zero.
+    public init(
+        _ shape: S, mainColor: Color, textColor: Color, darkShadowColor: Color, lightShadowColor: Color,
+        pressedEffect: SoftButtonPressedEffect, padding: CGFloat = 16, minimumSize: CGSize
+    ) {
+        self.init(
+            shape, mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor,
+            lightShadowColor: lightShadowColor, pressedEffect: pressedEffect, padding: padding)
+        self.minimumSize = minimumSize
+    }
+
     /// Builds the button content for the current state.
     public func makeBody(configuration: Self.Configuration) -> some View {
         SoftDynamicButton(
             configuration: configuration, shape: shape, mainColor: mainColor, textColor: textColor,
             darkShadowColor: darkShadowColor, lightShadowColor: lightShadowColor, pressedEffect: pressedEffect,
-            padding: padding)
+            padding: padding, minimumSize: minimumSize)
     }
 
     struct SoftDynamicButton: View {
@@ -68,6 +97,7 @@ public struct SoftDynamicButtonStyle<S: Shape>: ButtonStyle {
         var lightShadowColor: Color
         var pressedEffect: SoftButtonPressedEffect
         var padding: CGFloat
+        var minimumSize: CGSize?
 
         @Environment(\.isEnabled) private var isEnabled: Bool
         @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -105,7 +135,7 @@ public struct SoftDynamicButtonStyle<S: Shape>: ButtonStyle {
 
                     }
                 )
-                .frame(minWidth: 44, minHeight: 44)
+                .modifier(NeumorphicButtonBoundsModifier(minimumSize: minimumSize))
         }
     }
 
@@ -174,6 +204,8 @@ public extension View {
 
     /// Applies a soft button style to the view.
     ///
+    /// Uses a 28-by-28-point minimum layout and hit region on macOS, and 44-by-44 on iOS.
+    ///
     /// - Parameters:
     ///   - content: The shape of the surface.
     ///   - padding: The inset between the label and the surface edge.
@@ -191,6 +223,34 @@ public extension View {
             SoftDynamicButtonStyle(
                 content, mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor,
                 lightShadowColor: lightShadowColor, pressedEffect: pressedEffect, padding: padding))
+    }
+
+    /// Applies a soft button style with explicit layout and rectangular hit bounds.
+    ///
+    /// Transparent margins are hittable and do not shrink during presses. Shadows may
+    /// extend beyond the complete frame. See <doc:ButtonSizing> for sizing examples.
+    ///
+    /// - Parameters:
+    ///   - content: The shape of the surface.
+    ///   - padding: The inset between the label and the surface edge.
+    ///   - mainColor: The surface color.
+    ///   - textColor: The label and symbol color.
+    ///   - darkShadowColor: The shadow color applied toward the lower-right edge.
+    ///   - lightShadowColor: The highlight color applied toward the upper-left edge.
+    ///   - pressedEffect: The visual treatment applied while the control is pressed.
+    ///   - minimumSize: The minimum complete layout and hit size. Use `.zero` for no minimum.
+    ///     Negative or nonfinite components become zero.
+    func softButtonStyle<S: Shape>(
+        _ content: S, padding: CGFloat = 16, mainColor: Color = Color.Neumorphic.main,
+        textColor: Color = Color.Neumorphic.secondary, darkShadowColor: Color = Color.Neumorphic.darkShadow,
+        lightShadowColor: Color = Color.Neumorphic.lightShadow, pressedEffect: SoftButtonPressedEffect = .hard,
+        minimumSize: CGSize
+    ) -> some View {
+        self.buttonStyle(
+            SoftDynamicButtonStyle(
+                content, mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor,
+                lightShadowColor: lightShadowColor, pressedEffect: pressedEffect, padding: padding,
+                minimumSize: minimumSize))
     }
 
 }
