@@ -21,6 +21,8 @@
 
 ### Documentation
 
+- Added a complete visual control gallery with API entry points and platform sizing images. README and DocC now share a single image resource directory; the capture tools generate gallery previews with explicit display scale and a fixed time zone.
+
 - Clarified that fixed button `size` sets the label frame before padding, and distinguished surface bounds, complete layout, hit regions, and shadows. Documented Apple’s platform control sizes and natural text growth.
 
 ## 2.4.1 - 2026-08-28

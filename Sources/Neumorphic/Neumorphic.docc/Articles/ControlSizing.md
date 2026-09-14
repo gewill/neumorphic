@@ -85,3 +85,20 @@ compound controls no longer double-count padding, and the original switch style 
 platform sizing as the current switch style. Text fields and several controls now reserve less
 horizontal padding. Recheck adjacent controls and custom width/height constraints when upgrading.
 The existing public entry points and minimum OS versions remain available.
+
+## Platform examples
+
+The Example app's **Sizing** tab compares native SwiftUI and neumorphic controls under the same
+platform conditions. These light-appearance captures show macOS and iOS separately. Dashed outlines
+show layout bounds; they do not measure the actual hit region. Use the page's controls to explore
+sizes, longer labels, and disabled states.
+
+### macOS
+
+![macOS control sizing comparison](control-sizing-macos.png)
+
+### iOS
+
+![iOS control sizing comparison](control-sizing-ios.png)
+
+For an overview of every control and style, see <doc:ControlGallery>.

@@ -96,6 +96,7 @@ swift package diagnose-api-breaking-changes "$(git describe --tags --abbrev=0 --
 - 行为、平台支持或安装方式变化时，同步更新 `README.md`。
 - 架构决定、兼容策略及审计结论记录到 `Docs`。
 - 文档中的版本号、平台列表和代码示例必须与源码一致。
+- 新增控件或样式、调整外观时，同步 DocC `ControlGallery` 与 `Scripts/readme-shots` 中对应的配图生成逻辑；README 与 DocC 共用 `Neumorphic.docc/Resources`，不要维护两份图片。图库图片注明平台，不能替代交互验收证据。
 - 语言分工：面向用户的 `README.md`、`CHANGELOG.md`、DocC 用英文；`Docs` 审计、issue、PR 与 commit 用中文。
 - 对比度、性能等数值必须实测后再写入文档，不能把推断当结论；无法测量就不写。
 

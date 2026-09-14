@@ -2,17 +2,24 @@ import AppKit
 import Neumorphic
 import SwiftUI
 
-// Renders the README illustrations from the same code the README shows, so the
+// Renders README illustrations and the DocC control gallery. README images use the
+// same code the README shows, so the
 // images cannot drift from the snippets beside them. Run from the repository root:
 //
 //     swift run --package-path Scripts/readme-shots readme-shots
+//     swift run --package-path Scripts/readme-shots readme-shots --gallery
 //
 // `hero.png` and `search-bar.png` are not produced here: they contain a TextField,
 // which ImageRenderer draws as an "unsupported" placeholder. See README.md in this
 // directory for how those two and the animated GIF are captured instead.
 // The sizing pages use capture-sizing.py to capture the real Example app on each platform.
 
-let outputDirectory = URL(fileURLWithPath: CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "Docs/images")
+let arguments = CommandLine.arguments.dropFirst()
+let galleryOnly = arguments.contains("--gallery")
+let outputDirectory = URL(
+    fileURLWithPath: arguments.first(where: { $0 != "--gallery" })
+        ?? "Sources/Neumorphic/Neumorphic.docc/Resources")
+try FileManager.default.createDirectory(at: outputDirectory, withIntermediateDirectories: true)
 
 /// Renders one illustration onto the neumorphic surface color and writes it as a PNG.
 @MainActor
@@ -100,6 +107,10 @@ private struct ShapeToggles: View {
 }
 
 MainActor.assumeIsolated {
+    if galleryOnly {
+        renderControlGallery(to: outputDirectory)
+        exit(0)
+    }
     write("outer-shadow") {
         RoundedRectangle(cornerRadius: 20)
             .fill(Color.Neumorphic.main)
