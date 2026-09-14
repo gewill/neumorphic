@@ -23,6 +23,10 @@
 
 - Clarified that fixed button `size` sets the label frame before padding, and distinguished surface bounds, complete layout, hit regions, and shadows. Documented Apple’s platform control sizes and natural text growth.
 
+### Tooling
+
+- Guarded the `NeumorphicMenu` and `NeumorphicLink` test checks with `#available` so the test target compiles for iOS 13. Swift Package Index's iOS build compiles the tests through the package scheme and had marked iOS as incompatible; CI now runs the same build.
+
 ## 2.4.1 - 2026-08-28
 
 ### Documentation
