@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A compact stepper with neumorphic decrement and increment buttons.
 public struct NeumorphicStepper: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     @Binding private var value: Int
     private let bounds: ClosedRange<Int>
@@ -21,17 +22,19 @@ public struct NeumorphicStepper: View {
 
     /// The rendered stepper.
     public var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: metrics.spacing) {
             Button {
                 value = max(bounds.lowerBound, value - 1)
             } label: {
-                Text("−").font(.body.weight(.semibold)).frame(minWidth: 44, minHeight: 44)
+                Text("−").font(.body.weight(.semibold)).padding(.horizontal, metrics.horizontalPadding)
+                    .padding(.vertical, metrics.verticalPadding)
+                    .modifier(NeumorphicControlBoundsModifier())
             }
             .buttonStyle(
                 SoftDynamicButtonStyle(
                     Circle(), mainColor: theme.mainColor, textColor: theme.secondaryColor,
                     darkShadowColor: theme.darkShadowColor, lightShadowColor: theme.lightShadowColor,
-                    pressedEffect: .hard, padding: 10)
+                    pressedEffect: .hard, padding: 0, minimumSize: .zero)
             )
             .disabled(value <= bounds.lowerBound)
             .neumorphicButtonAccessibility(
@@ -41,13 +44,15 @@ public struct NeumorphicStepper: View {
             Button {
                 value = min(bounds.upperBound, value + 1)
             } label: {
-                Text("+").font(.body.weight(.semibold)).frame(minWidth: 44, minHeight: 44)
+                Text("+").font(.body.weight(.semibold)).padding(.horizontal, metrics.horizontalPadding)
+                    .padding(.vertical, metrics.verticalPadding)
+                    .modifier(NeumorphicControlBoundsModifier())
             }
             .buttonStyle(
                 SoftDynamicButtonStyle(
                     Circle(), mainColor: theme.mainColor, textColor: theme.secondaryColor,
                     darkShadowColor: theme.darkShadowColor, lightShadowColor: theme.lightShadowColor,
-                    pressedEffect: .hard, padding: 10)
+                    pressedEffect: .hard, padding: 0, minimumSize: .zero)
             )
             .disabled(value >= bounds.upperBound)
             .neumorphicButtonAccessibility(

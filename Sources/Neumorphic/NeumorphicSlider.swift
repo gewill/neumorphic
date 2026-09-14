@@ -4,6 +4,8 @@ import SwiftUI
 
 /// A neumorphic slider with an inset track and raised thumb.
 public struct NeumorphicSlider: View {
+    @NeumorphicControlSizing private var metrics
+    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.neumorphicTheme) private var theme
     @Binding private var value: Double
     @State private var editingSession = NeumorphicSliderEditingSession()
@@ -86,26 +88,34 @@ public struct NeumorphicSlider: View {
                         spread: 0.5,
                         radius: 3
                     )
-                Capsule().fill(tint.opacity(0.8)).frame(width: max(0, width * progress), height: 6)
-                Circle().fill(theme.mainColor).frame(width: 28, height: 28)
-                    .softOuterShadow(
-                        darkShadow: theme.darkShadowColor,
-                        lightShadow: theme.lightShadowColor,
-                        offset: 3,
-                        radius: 2
-                    )
-                    .overlay(Circle().fill(tint).frame(width: 10, height: 10))
-                    .offset(x: max(width - 28, 0) * progress)
+                    .frame(height: metrics.sliderTrackHeight + 2)
+                Capsule().fill(tint.opacity(0.8)).frame(
+                    width: max(0, width * progress), height: metrics.sliderTrackHeight)
+                Circle().fill(theme.mainColor).frame(
+                    width: metrics.sliderThumbDiameter, height: metrics.sliderThumbDiameter
+                )
+                .softOuterShadow(
+                    darkShadow: theme.darkShadowColor,
+                    lightShadow: theme.lightShadowColor,
+                    offset: 3,
+                    radius: 2
+                )
+                .overlay(
+                    Circle().fill(tint).frame(
+                        width: metrics.sliderThumbDiameter * 0.35, height: metrics.sliderThumbDiameter * 0.35)
+                )
+                .offset(x: max(width - metrics.sliderThumbDiameter, 0) * progress)
             }
-            .frame(height: 28)
+            .frame(height: metrics.sliderThumbDiameter)
             .frame(maxHeight: .infinity)
             .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .updating($isDragging) { _, state, _ in
-                        state = true
+                        state = isEnabled
                     }
                     .onChanged { gesture in
+                        guard isEnabled else { return }
                         updateValue(at: gesture.location.x, width: width)
                     }
                     .onEnded { _ in
@@ -113,7 +123,7 @@ public struct NeumorphicSlider: View {
                     }
             )
         }
-        .frame(height: 44)
+        .frame(height: metrics.minimumDimension)
         .onReceive(Just(isDragging).removeDuplicates()) { isDragging in
             if isDragging {
                 beginEditing()
@@ -151,7 +161,8 @@ public struct NeumorphicSlider: View {
 
     private func updateValue(at x: CGFloat, width: CGFloat) {
         value = NeumorphicSliderMath.value(
-            at: NeumorphicSliderMath.fraction(at: Double(x), width: Double(width)),
+            at: NeumorphicSliderMath.fraction(
+                at: Double(x), width: Double(width), thumbWidth: Double(metrics.sliderThumbDiameter)),
             in: bounds,
             step: step
         )
@@ -170,6 +181,7 @@ public struct NeumorphicSlider: View {
     }
 
     private func adjustValue(for direction: AccessibilityAdjustmentDirection) {
+        guard isEnabled else { return }
         switch direction {
         case .increment:
             value = NeumorphicSliderMath.adjustedValue(value, in: bounds, step: step, incrementing: true)

@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A date picker presented on a soft inset surface.
 public struct NeumorphicDatePicker: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     private let title: String
     @Binding private var selection: Date
@@ -34,11 +35,11 @@ public struct NeumorphicDatePicker: View {
                 DatePicker(title, selection: $selection, displayedComponents: displayedComponents)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, metrics.horizontalPadding)
+        .padding(.vertical, metrics.verticalPadding)
         .foregroundColor(theme.secondaryColor)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: metrics.cornerRadius)
                 .fill(theme.mainColor)
                 .softOuterShadow(.subtle)
         )

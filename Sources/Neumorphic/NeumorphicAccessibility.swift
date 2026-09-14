@@ -73,3 +73,13 @@ struct NeumorphicButtonBoundsModifier: ViewModifier {
             .contentShape(Rectangle())
     }
 }
+
+struct NeumorphicControlBoundsModifier: ViewModifier {
+    @NeumorphicControlSizing private var metrics
+
+    func body(content: Content) -> some View {
+        content
+            .frame(minWidth: metrics.minimumDimension, minHeight: metrics.minimumDimension)
+            .contentShape(Rectangle())
+    }
+}

@@ -82,19 +82,17 @@ public struct SoftDynamicToggleStyle<S: Shape>: ToggleStyle {
                     }
                 )
                 .opacity(isEnabled ? 1 : 0.4)
+                .modifier(NeumorphicControlBoundsModifier())
         }
         .buttonStyle(.plain)
         .stateAccessibilityValue(configuration.isOn)
-        .frame(minWidth: 44, minHeight: 44)
+
     }
 
 }
 
 /// A horizontal switch-style toggle with soft shadows.
 public struct SoftSwitchToggleStyle: ToggleStyle {
-
-    @Environment(\.isEnabled) private var isEnabled
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var tintColor: Color
     var offTintColor: Color
@@ -107,49 +105,11 @@ public struct SoftSwitchToggleStyle: ToggleStyle {
 
     /// Builds the switch content for the current state.
     public func makeBody(configuration: Self.Configuration) -> some View {
-        Button {
-            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
-                configuration.isOn.toggle()
-            }
-        } label: {
-            HStack {
-                if !hideLabel {
-                    configuration.label
-                        .font(.body)
-                    Spacer()
-                }
-                ZStack {
-                    Capsule()
-                        .fill(mainColor)
-                        .softOuterShadow(
-                            darkShadow: darkShadowColor,
-                            lightShadow: lightShadowColor
-                        )
-                        .frame(width: 75, height: 45)
-
-                    Capsule()
-                        .fill(configuration.isOn ? tintColor : offTintColor)
-                        .softInnerShadow(
-                            Capsule(), darkShadow: configuration.isOn ? tintColor : darkShadowColor,
-                            lightShadow: configuration.isOn ? tintColor : lightShadowColor, spread: 0.35, radius: 3
-                        )
-                        .frame(width: 70, height: 40)
-
-                    Circle()
-                        .fill(mainColor)
-                        .softOuterShadow(
-                            darkShadow: darkShadowColor, lightShadow: lightShadowColor, offset: 2, radius: 1
-                        )
-                        .frame(width: 30, height: 30)
-                        .offset(x: configuration.isOn ? 15 : -15)
-                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: configuration.isOn)
-                }
-                .opacity(isEnabled ? 1 : 0.3)
-            }
-        }
-        .buttonStyle(.plain)
-        .stateAccessibilityValue(configuration.isOn)
-        .frame(minWidth: 44, minHeight: 44)
+        Toggle(isOn: configuration.$isOn) { configuration.label }
+            .toggleStyle(
+                NeumorphicSwitchToggleStyle(
+                    tint: tintColor, offTint: offTintColor, mainColor: mainColor,
+                    darkShadowColor: darkShadowColor, lightShadowColor: lightShadowColor, labelsHidden: hideLabel))
     }
 
 }

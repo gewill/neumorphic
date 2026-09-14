@@ -49,6 +49,7 @@ NeumorphicCircularProgressView(value: 0.65)
 
 - <doc:GettingStarted>
 - <doc:Accessibility>
+- <doc:ControlSizing>
 
 ### Shadows
 
@@ -116,6 +117,9 @@ The style initializers offer the same override parameter; see <doc:ButtonSizing>
 Applied through `softToggleStyle(_:padding:mainColor:textColor:darkShadowColor:lightShadowColor:pressedEffect:)` and
 `switchToggleStyle(tint:offTint:mainColor:darkShadowColor:lightShadowColor:labelsHidden:height:)`, or the
 `.neumorphicSwitch` shorthand on `toggleStyle(_:)`.
+Omit `height` in `switchToggleStyle` or `neumorphicThemedSwitchStyle` to follow platform and
+`controlSize` defaults. The switch style initializer also provides an automatic-size overload.
+See <doc:ControlSizing>.
 
 ### Focus and Pointer
 

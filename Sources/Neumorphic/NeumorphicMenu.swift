@@ -3,6 +3,7 @@ import SwiftUI
 /// A menu button with a raised neumorphic trigger surface.
 @available(iOS 14.0, macOS 11.0, *)
 public struct NeumorphicMenu<Selection: Hashable>: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     private let title: String
     @Binding private var selection: Selection
@@ -37,17 +38,19 @@ public struct NeumorphicMenu<Selection: Hashable>: View {
                 }
             }
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: metrics.spacing) {
                 Text(label(selection)).lineLimit(nil)
                 Text("⌄")
             }
-            .frame(minWidth: 120, minHeight: 44)
+            .padding(.horizontal, metrics.horizontalPadding)
+            .padding(.vertical, metrics.verticalPadding)
+            .modifier(NeumorphicControlBoundsModifier())
         }
         .buttonStyle(
             SoftDynamicButtonStyle(
                 Capsule(), mainColor: theme.mainColor, textColor: theme.secondaryColor,
                 darkShadowColor: theme.darkShadowColor, lightShadowColor: theme.lightShadowColor, pressedEffect: .hard,
-                padding: 10)
+                padding: 0, minimumSize: .zero)
         )
         .neumorphicButtonAccessibility(label: title, hint: "Double-tap to choose an option")
     }

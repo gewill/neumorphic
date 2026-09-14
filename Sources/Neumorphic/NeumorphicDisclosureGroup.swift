@@ -2,6 +2,7 @@ import SwiftUI
 
 /// An expandable group with a soft raised header.
 public struct NeumorphicDisclosureGroup<Content: View>: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     private let title: String
     @Binding private var isExpanded: Bool
@@ -21,7 +22,7 @@ public struct NeumorphicDisclosureGroup<Content: View>: View {
 
     /// The rendered disclosure group.
     public var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: metrics.spacing) {
             Button {
                 isExpanded.toggle()
             } label: {
@@ -31,7 +32,9 @@ public struct NeumorphicDisclosureGroup<Content: View>: View {
                     Text(isExpanded ? "⌃" : "⌄").font(.headline)
                 }
                 .foregroundColor(theme.secondaryColor)
-                .frame(minHeight: 44)
+                .padding(.horizontal, metrics.horizontalPadding)
+                .padding(.vertical, metrics.verticalPadding)
+                .modifier(NeumorphicControlBoundsModifier())
             }
             .buttonStyle(PlainButtonStyle())
             .neumorphicButtonAccessibility(
@@ -42,9 +45,8 @@ public struct NeumorphicDisclosureGroup<Content: View>: View {
                     .padding(.bottom, 12)
             }
         }
-        .padding(.horizontal, 14)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: metrics.cornerRadius)
                 .fill(theme.mainColor)
                 .softOuterShadow(.subtle)
         )

@@ -4,11 +4,20 @@
 
 ### Breaking Changes
 
+- Applied platform and `controlSize` metrics to the remaining interactive controls. Compact macOS layouts shrink, compound controls stop double-counting padding, and the original switch style shares the current style’s automatic geometry. Date pickers retain native sizing with smaller desktop decoration padding.
+
 - Changed the default minimum layout of dynamic buttons on macOS from 44×44 to 28×28 points, including themed buttons. iOS retains 44×44. Compact Mac buttons can now occupy less space; pass `minimumSize: CGSize(width: 44, height: 44)` to retain the previous minimum. Existing signatures and padding behavior remain available.
 
 ### Added
 
+- Added automatic-size switch initializer and modifier overloads; explicit `height` continues to override visual geometry.
+
 - Added opt-in `minimumSize` overloads for dynamic button styles and their convenience modifiers. Callers can override the platform minimum. All dynamic style overloads use rectangular hit bounds that include transparent margins and stay stable during presses.
+
+### Fixed
+
+- Made transparent toggle margins hittable and text-field gutters focusable while preserving native editing and disabled behavior, including compatibility handling before SwiftUI focus state.
+- Kept slider drag mapping synchronized with the thumb size and ignored pointer and keyboard updates while disabled.
 
 ### Documentation
 
