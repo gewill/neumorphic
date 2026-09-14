@@ -12,9 +12,9 @@
 Run the same checks as CI:
 
 ```sh
-git diff --check
+git diff --check origin/master...HEAD
 swift format lint --recursive --strict Package.swift Sources Tests neumorphic-examples/Shared Scripts/readme-shots/Package.swift Scripts/readme-shots/Sources
-swift test --scratch-path .build/macos
+swift test --scratch-path .build/macos -Xswiftc -warnings-as-errors
 swift build --target Neumorphic --scratch-path .build/macos-minimum --sdk "$(xcrun --sdk macosx --show-sdk-path)" --triple x86_64-apple-macosx10.15
 swift build --scratch-path .build/ios --sdk "$(xcrun --sdk iphoneos --show-sdk-path)" --triple arm64-apple-ios13.0
 xcodebuild build -scheme Neumorphic -destination 'generic/platform=iOS' -derivedDataPath .build/spi-ios CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
@@ -23,7 +23,20 @@ api_baseline="$(git describe --tags --abbrev=0 --match 'v*' HEAD^)"
 swift package diagnose-api-breaking-changes "$api_baseline" --products Neumorphic
 ```
 
+Commit your changes first: like CI, the whitespace check covers everything committed on your branch, while `git diff --check` without a range only inspects unstaged changes.
+
 The `xcodebuild` command mirrors Swift Package Index's iOS build: the shared `Neumorphic` scheme compiles `NeumorphicTests` for the iOS 13 deployment target, which `swift test` on macOS does not exercise. Guard test code that calls iOS 14+ APIs with `#available`.
+
+When changing public API or `neumorphic-examples/Shared`, also build the example app for macOS and iOS. It depends on the local package, and none of the checks above compile it:
+
+```sh
+xcodebuild -workspace neumorphic.xcworkspace -scheme neumorphic-example \
+  -destination 'platform=macOS' -derivedDataPath .build/example-macos \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+xcodebuild -workspace neumorphic.xcworkspace -scheme neumorphic-example \
+  -destination 'generic/platform=iOS Simulator' -derivedDataPath .build/example-ios \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+```
 
 When changing documentation, also validate the DocC catalog:
 
