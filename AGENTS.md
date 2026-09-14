@@ -60,6 +60,25 @@
 - 涉及公共 API 时，用 `diagnose-api-breaking-changes` 对比最近发布 tag。
 - 改动 DocC 内容时，本地跑一次 DocC 校验（命令见 `CONTRIBUTING.md`）。
 
+## 控件平台适配与验收
+
+新增控件或修改控件的样式、布局、尺寸、交互时，必须逐项核对以下要求；仅修改文字等不影响控件行为的变更无需重复完整验收。
+
+- **先确认平台依据**：分别核查 iOS 与 macOS 的系统对应控件，不把一个平台的测量结论直接套用到另一个平台。原生控件没有直接对应样式时，注明参照对象与差异。
+- **区分三种尺寸**：可见表面、布局框和真实交互范围分别处理；阴影不计入布局，截图中的布局框不能证明命中范围。保留原生编辑器的自然尺寸，不强制所有控件具有相同视觉高度。
+- **复用尺寸策略**：自绘控件使用 `NeumorphicControlMetrics.swift` 与 `NeumorphicControlSizing`，不另写平台尺寸常量。当前 mini/small/regular/large 最小交互尺寸为 macOS 20/24/28/32 pt、iOS 44/44/44/52 pt；这些是库的策略，不是所有系统控件的固有尺寸。动态按钮保留 `ButtonSizing` 中独立的显式 `padding` / `minimumSize` 契约。
+- **保留环境与兼容性**：响应可用的 `controlSize`，验证较大辅助字体、长文本和多行内容自然增长，不用固定高度裁切。iOS 13–14 回退 regular，未知档位当前回退 large；显式尺寸 API 保持既有约定，最低版本和公开 API 变更遵循兼容规则。
+- **验证完整交互区域**：内容与 padding 处理完后再应用最终最小框，避免重复叠加。通过 `NeumorphicAccessibility.swift` 复用完整命中逻辑；中心、边缘及透明留白应按设计响应，按压动画不缩小目标。输入框验证外围聚焦和原生编辑，Slider 验证拖动与端点映射，所有交互控件验证禁用状态及适用的 VoiceOver、键盘和 Reduce Motion 行为。
+- **两个平台分别验收**：对受影响控件分别进行 iOS 触摸与 macOS 鼠标/键盘运行时验证，补充能复现问题的回归测试。记录设备、系统、工具链、提交、字体、语言、显示模式与布局条件；无法运行的系统或设备明确列为未覆盖，最低版本编译及强制兼容分支验证不能冒充对应系统实测。只测受影响范围，无需每次重跑全部控件。
+- **证据随 Issue / PR 提交**：需要展示界面效果时附截图，展示交互过程时附视频；截图和视频使用 `gh` 命令行上传并在 Issue 或 PR 中引用。PR 优先用表格并排对比相同条件下修改前后的截图或视频；新增控件提供系统参照。文件保留在仓库外，不能只贴结论或链接而省略 PR 中的对比展示。
+- **结论可追溯**：分别列出通过、失败及未覆盖项；平台策略变化同步设计记录和用户文档。iOS 验收记录见 [#11](https://github.com/gewill/neumorphic/issues/11)，真机辅助功能缺口见 [#12](https://github.com/gewill/neumorphic/issues/12)；不能把历史 macOS 验收视为 iOS 已通过。
+
+依据与解释：
+
+- [Apple Accessibility HIG — Mobility](https://developer.apple.com/design/human-interface-guidelines/accessibility)：平台默认目标为 iOS/iPadOS 44×44 pt、macOS 28×28 pt，最低值分别为 28×28 pt、20×20 pt；这与本库选择的各档最小交互尺寸是不同层次的约定。引用时重新核查当前官方内容，不把最低值当默认值，也不当作每类原生控件的视觉尺寸。
+- [SwiftUI controlSize](https://developer.apple.com/documentation/swiftui/environmentvalues/controlsize) 与 [Apple Typography HIG](https://developer.apple.com/design/human-interface-guidelines/typography)：核查系统尺寸环境和较大辅助字体的适配依据。
+- [平台尺寸设计记录](Docs/Control-Sizing.md)、[ControlSizing](Sources/Neumorphic/Neumorphic.docc/Articles/ControlSizing.md) 与 [ButtonSizing](Sources/Neumorphic/Neumorphic.docc/Articles/ButtonSizing.md)：本库尺寸令牌、例外、显式参数及兼容策略的具体约定。
+
 ## 常用命令
 
 ```bash
@@ -124,6 +143,8 @@ swift package diagnose-api-breaking-changes "$(git describe --tags --abbrev=0 --
 | `.github/workflows/ci.yml` | CI 实际执行的检查与门槛 |
 | `Docs/Project-Audit-2026-08-08.md` | 项目规范与兼容性审计结论及未完成项 |
 | `Docs/Neumorphism-Design-Audit-2026-08-09.md` | Neumorphism 设计与无障碍适配审计 |
+| `Docs/Control-Sizing.md` | 控件平台尺寸、交互区域与兼容策略 |
+| `Docs/iOS-Control-Acceptance-2026-09-14.md` | iOS 控件尺寸与交互验收结论、覆盖边界 |
 | `Sources/Neumorphic/Neumorphic.docc/` | 面向用户的 API 文档与文章 |
 | `Scripts/readme-shots/README.md` | README 示意图的渲染工具与截图流程 |
 | `CLAUDE.md` | Claude Code 专属约定 |
