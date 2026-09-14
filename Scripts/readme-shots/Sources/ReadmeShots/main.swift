@@ -10,6 +10,7 @@ import SwiftUI
 // `hero.png` and `search-bar.png` are not produced here: they contain a TextField,
 // which ImageRenderer draws as an "unsupported" placeholder. See README.md in this
 // directory for how those two and the animated GIF are captured instead.
+// The sizing pages use capture-sizing.py to capture the real Example app on each platform.
 
 let outputDirectory = URL(fileURLWithPath: CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "Docs/images")
 
