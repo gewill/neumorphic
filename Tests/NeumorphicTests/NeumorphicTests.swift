@@ -231,16 +231,22 @@ final class NeumorphicTests: XCTestCase {
 
     func testNextCommonControlEntryPointsCompile() {
         let datePicker = NeumorphicDatePicker("Start", selection: .constant(Date()))
-        let menu = NeumorphicMenu("Mode", selection: .constant("Light"), options: ["Light", "Dark"])
         let disclosure = NeumorphicDisclosureGroup("Details", isExpanded: .constant(true)) { Text("Content") }
-        let link = NeumorphicLink("Website", destination: URL(string: "https://example.com")!)
         let circular = NeumorphicCircularProgressView(value: 0.5)
 
         XCTAssertFalse(String(describing: type(of: datePicker)).isEmpty)
-        XCTAssertFalse(String(describing: type(of: menu)).isEmpty)
         XCTAssertFalse(String(describing: type(of: disclosure)).isEmpty)
-        XCTAssertFalse(String(describing: type(of: link)).isEmpty)
         XCTAssertFalse(String(describing: type(of: circular)).isEmpty)
+
+        // Menu and Link require iOS 14 / macOS 11, but iOS builds of this test target use the
+        // package's iOS 13 deployment target.
+        if #available(iOS 14.0, macOS 11.0, *) {
+            let menu = NeumorphicMenu("Mode", selection: .constant("Light"), options: ["Light", "Dark"])
+            let link = NeumorphicLink("Website", destination: URL(string: "https://example.com")!)
+
+            XCTAssertFalse(String(describing: type(of: menu)).isEmpty)
+            XCTAssertFalse(String(describing: type(of: link)).isEmpty)
+        }
     }
 
     func testSliderStepIsAnchoredToLowerBound() {
