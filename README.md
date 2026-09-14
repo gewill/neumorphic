@@ -6,7 +6,9 @@ A SwiftUI library for soft, tactile "neumorphism" interfaces — the two shadow 
 
 SwiftUI gives you an outer shadow in one line. It has no inner shadow, and neumorphism needs both. This package supplies the missing half, then uses it consistently across buttons, toggles, sliders, fields, and the rest so a whole screen can share one soft surface.
 
-![Neumorphic controls on a soft surface](Docs/images/hero.png)
+![Neumorphic controls on a soft surface](Sources/Neumorphic/Neumorphic.docc/Resources/hero.png)
+
+Browse the [complete control gallery](https://swiftpackageindex.com/gewill/neumorphic/master/documentation/neumorphic/controlgallery) for visual previews and API links. The gallery is also included in the package’s DocC documentation hosted by [Swift Package Index](https://swiftpackageindex.com/gewill/neumorphic).
 
 ## About this fork
 
@@ -57,7 +59,7 @@ Everything else in this library is built out of these.
 
 ### Outer shadow
 
-![Outer shadow](Docs/images/outer-shadow.png)
+![Outer shadow](Sources/Neumorphic/Neumorphic.docc/Resources/outer-shadow.png)
 
 ```swift
 RoundedRectangle(cornerRadius: 20)
@@ -67,7 +69,7 @@ RoundedRectangle(cornerRadius: 20)
 
 ### Inner shadow
 
-![Inner shadow](Docs/images/inner-shadow.png)
+![Inner shadow](Sources/Neumorphic/Neumorphic.docc/Resources/inner-shadow.png)
 
 ```swift
 RoundedRectangle(cornerRadius: 20)
@@ -79,7 +81,7 @@ Note that `softInnerShadow` takes the shape as an argument — it needs to know 
 
 ### Both, side by side
 
-![Outer and inner shadow side by side](Docs/images/shadows-side-by-side.png)
+![Outer and inner shadow side by side](Sources/Neumorphic/Neumorphic.docc/Resources/shadows-side-by-side.png)
 
 ```swift
 HStack {
@@ -117,7 +119,7 @@ RoundedRectangle(cornerRadius: 16)
 
 An inset field, for instance, is just a text field over an inner-shadowed background:
 
-![Search bar](Docs/images/search-bar.png)
+![Search bar](Sources/Neumorphic/Neumorphic.docc/Resources/search-bar.png)
 
 ```swift
 HStack {
@@ -137,7 +139,7 @@ HStack {
 
 And a bar chart is an inner-shadowed track with a plain fill on top:
 
-![Bar chart](Docs/images/bar-chart.png)
+![Bar chart](Sources/Neumorphic/Neumorphic.docc/Resources/bar-chart.png)
 
 ```swift
 ZStack(alignment: .bottom) {
@@ -182,7 +184,7 @@ native SwiftUI with Neumorphic, and toggle layout outlines, long labels or disab
 
 | macOS · Regular | iOS · Regular |
 | --- | --- |
-| ![macOS control sizing page](Docs/images/control-sizing-macos.png) | ![iOS control sizing page](Docs/images/control-sizing-ios.png) |
+| ![macOS control sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/control-sizing-macos.png) | ![iOS control sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/control-sizing-ios.png) |
 
 Text fields, sliders, switches, steppers, segmented pickers, menus, checkboxes, radio buttons, and disclosure headers use platform-aware sizing. Regular controls reserve a minimum interaction height of **28 pt on macOS** and **44 pt on iOS**. Content and padding are included once; longer or larger text can grow naturally.
 
@@ -194,7 +196,7 @@ Omit Switch `height` to follow the platform and size environment; provide it exp
 
 ## Buttons
 
-![Soft button](Docs/images/soft-button.png)
+![Soft button](Sources/Neumorphic/Neumorphic.docc/Resources/soft-button.png)
 
 ```swift
 Button(action: {}) {
@@ -220,7 +222,7 @@ func neumorphicThemedButtonStyle<S: Shape>(
 
 Any shape works, and `SoftDynamicButtonStyle` is there for buttons that need colors outside the current theme:
 
-![Accent role button beside a custom-colored button](Docs/images/custom-button.png)
+![Accent role button beside a custom-colored button](Sources/Neumorphic/Neumorphic.docc/Resources/custom-button.png)
 
 ```swift
 HStack {
@@ -251,7 +253,7 @@ not use the Controls size selector.
 
 | macOS · Platform minimum | iOS · Platform minimum |
 | --- | --- |
-| ![macOS button sizing page](Docs/images/button-sizing-macos.png) | ![iOS button sizing page](Docs/images/button-sizing-ios.png) |
+| ![macOS button sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/button-sizing-macos.png) | ![iOS button sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/button-sizing-ios.png) |
 
 [Regenerate the sizing screenshots](Scripts/readme-shots/README.md#sizing-page-real-macos-and-ios-controls)
 from the running example app.
@@ -276,7 +278,7 @@ For growing or multiline text, use `.softButtonStyle(Capsule(), padding: 6)`. Se
 
 ### Pressed effects
 
-![Pressed effects](Docs/images/pressed-effects.gif)
+![Pressed effects](Sources/Neumorphic/Neumorphic.docc/Resources/pressed-effects.gif)
 
 ```swift
 HStack {
@@ -295,7 +297,7 @@ HStack {
 
 ### Switch
 
-![Switch toggle](Docs/images/switch-toggle.png)
+![Switch toggle](Sources/Neumorphic/Neumorphic.docc/Resources/switch-toggle.png)
 
 ```swift
 Toggle("Toggle", isOn: $toggleIsOn)
@@ -306,7 +308,7 @@ Or `.neumorphicThemedSwitchStyle(tint:labelsHidden:height:)` to follow the envir
 
 ### Shape
 
-![Shape toggle](Docs/images/shape-toggle.png)
+![Shape toggle](Sources/Neumorphic/Neumorphic.docc/Resources/shape-toggle.png)
 
 A toggle that presses in and stays in — good for play/stop:
 

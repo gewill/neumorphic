@@ -5,6 +5,7 @@ Build soft, neumorphic interfaces with SwiftUI view modifiers, button styles, an
 ## Overview
 
 New here? <doc:GettingStarted> walks through the first surface, the controls, and theming.
+Browse <doc:ControlGallery> for a visual list of every control family and style.
 
 The package supports iOS 13.0 and later and macOS 10.15 and later. Use the default `Color.Neumorphic` colors to get light and dark appearance support, or provide an environment `NeumorphicTheme`; built-in controls inherit that theme.
 
@@ -48,6 +49,7 @@ NeumorphicCircularProgressView(value: 0.65)
 ### Essentials
 
 - <doc:GettingStarted>
+- <doc:ControlGallery>
 - <doc:Accessibility>
 - <doc:ControlSizing>
 

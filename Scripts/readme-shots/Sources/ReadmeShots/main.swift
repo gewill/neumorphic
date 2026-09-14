@@ -12,7 +12,12 @@ import SwiftUI
 // directory for how those two and the animated GIF are captured instead.
 // The sizing pages use capture-sizing.py to capture the real Example app on each platform.
 
-let outputDirectory = URL(fileURLWithPath: CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "Docs/images")
+let arguments = CommandLine.arguments.dropFirst()
+let galleryOnly = arguments.contains("--gallery")
+let outputDirectory = URL(
+    fileURLWithPath: arguments.first(where: { $0 != "--gallery" })
+        ?? "Sources/Neumorphic/Neumorphic.docc/Resources")
+try FileManager.default.createDirectory(at: outputDirectory, withIntermediateDirectories: true)
 
 /// Renders one illustration onto the neumorphic surface color and writes it as a PNG.
 @MainActor
@@ -100,6 +105,10 @@ private struct ShapeToggles: View {
 }
 
 MainActor.assumeIsolated {
+    if galleryOnly {
+        renderControlGallery(to: outputDirectory)
+        exit(0)
+    }
     write("outer-shadow") {
         RoundedRectangle(cornerRadius: 20)
             .fill(Color.Neumorphic.main)

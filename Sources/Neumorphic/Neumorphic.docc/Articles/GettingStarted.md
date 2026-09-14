@@ -9,6 +9,8 @@ one continuous surface. That effect needs two shadows — a dark one on the lowe
 on the upper-left. SwiftUI gives you the outer half in one line and has no inner shadow at all, which
 is the gap this package fills.
 
+Browse <doc:ControlGallery> to see the complete control set with previews and API links.
+
 ## Add the package
 
 In Xcode, choose File → Add Package Dependencies and enter `https://github.com/gewill/neumorphic.git`,

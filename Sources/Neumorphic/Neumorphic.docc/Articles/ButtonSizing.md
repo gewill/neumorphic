@@ -70,3 +70,20 @@ Button("Continue") { }
 Account for padding already applied by the caller: it contributes to the label's size before the
 style's own padding. Adding a minimum label height and then style padding can make the complete
 control larger than the chosen minimum.
+
+## Platform examples
+
+The Example app's **Sizing** tab compares native SwiftUI and neumorphic controls under the same
+platform conditions. These light-appearance captures show macOS and iOS separately. Dashed outlines
+show layout bounds; they do not measure the actual hit region. Use the page's controls to explore
+sizes, longer labels, and disabled states.
+
+### macOS
+
+![macOS button sizing comparison](button-sizing-macos.png)
+
+### iOS
+
+![iOS button sizing comparison](button-sizing-ios.png)
+
+For an overview of every control and style, see <doc:ControlGallery>.
