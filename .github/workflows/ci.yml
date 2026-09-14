@@ -49,6 +49,13 @@ jobs:
       - name: Build for iOS
         run: swift build --scratch-path .build/ios --sdk "$(xcrun --sdk iphoneos --show-sdk-path)" --triple arm64-apple-ios13.0
 
+      - name: Build package scheme for iOS
+        # Mirrors Swift Package Index's iOS build. The shared scheme also builds
+        # NeumorphicTests, so test code has to compile for the iOS 13 deployment target.
+        run: >-
+          xcodebuild build -scheme Neumorphic -destination 'generic/platform=iOS'
+          -derivedDataPath .build/spi-ios CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+
       - name: Build macOS Example
         run: >-
           xcodebuild -workspace neumorphic.xcworkspace -scheme neumorphic-example

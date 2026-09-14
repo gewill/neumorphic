@@ -17,10 +17,13 @@ swift format lint --recursive --strict Package.swift Sources Tests neumorphic-ex
 swift test --scratch-path .build/macos
 swift build --target Neumorphic --scratch-path .build/macos-minimum --sdk "$(xcrun --sdk macosx --show-sdk-path)" --triple x86_64-apple-macosx10.15
 swift build --scratch-path .build/ios --sdk "$(xcrun --sdk iphoneos --show-sdk-path)" --triple arm64-apple-ios13.0
+xcodebuild build -scheme Neumorphic -destination 'generic/platform=iOS' -derivedDataPath .build/spi-ios CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 swiftc -typecheck -swift-version 6 -strict-concurrency=complete -target arm64-apple-macosx14.0 -module-name Neumorphic Sources/Neumorphic/*.swift
 api_baseline="$(git describe --tags --abbrev=0 --match 'v*' HEAD^)"
 swift package diagnose-api-breaking-changes "$api_baseline" --products Neumorphic
 ```
+
+The `xcodebuild` command mirrors Swift Package Index's iOS build: the shared `Neumorphic` scheme compiles `NeumorphicTests` for the iOS 13 deployment target, which `swift test` on macOS does not exercise. Guard test code that calls iOS 14+ APIs with `#available`.
 
 When changing documentation, also validate the DocC catalog:
 
