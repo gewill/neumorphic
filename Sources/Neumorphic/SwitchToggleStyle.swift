@@ -9,6 +9,7 @@ import SwiftUI
 
 /// A SwiftUI-compatible switch toggle style with Neumorphic visuals.
 public struct NeumorphicSwitchToggleStyle: ToggleStyle {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -20,8 +21,11 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
     var lightShadowColor: Color
 
     var hideLabel: Bool
-    var height: CGFloat
-    var ratio: CGFloat { height / 45 }
+    var height: CGFloat?
+    var geometry: NeumorphicSwitchGeometry {
+        height.map(NeumorphicSwitchGeometry.init(height:)) ?? metrics.switchGeometry
+    }
+    var ratio: CGFloat { geometry.height / 45 }
 
     /// Creates a switch style with customizable colors and dimensions.
     ///
@@ -32,7 +36,7 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
     ///   - darkShadowColor: The shadow color applied toward the lower-right edge.
     ///   - lightShadowColor: The highlight color applied toward the upper-left edge.
     ///   - labelsHidden: A Boolean value that hides the label when `true`.
-    ///   - height: The control height in points. Values below 1 are normalized to 1.
+    ///   - height: An explicit surface height, overriding platform sizing. Invalid values become 1.
     public init(
         tint: Color = .green,
         offTint: Color = Color.Neumorphic.main,
@@ -48,7 +52,27 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
         self.darkShadowColor = darkShadowColor
         self.lightShadowColor = lightShadowColor
         self.hideLabel = labelsHidden
-        self.height = max(height, 1)
+        self.height = height.isFinite ? max(height, 1) : 1
+    }
+
+    /// Creates a switch whose visual size follows the platform and `controlSize` environment.
+    ///
+    /// - Parameters:
+    ///   - tint: The track color while the control is on.
+    ///   - offTint: The track color while the control is off.
+    ///   - mainColor: The switch surface color.
+    ///   - darkShadowColor: The lower-right shadow color.
+    ///   - lightShadowColor: The upper-left highlight color.
+    ///   - labelsHidden: Whether to hide the label.
+    public init(
+        tint: Color = .green, offTint: Color = Color.Neumorphic.main,
+        mainColor: Color = Color.Neumorphic.main, darkShadowColor: Color = Color.Neumorphic.darkShadow,
+        lightShadowColor: Color = Color.Neumorphic.lightShadow, labelsHidden: Bool = false
+    ) {
+        self.init(
+            tint: tint, offTint: offTint, mainColor: mainColor, darkShadowColor: darkShadowColor,
+            lightShadowColor: lightShadowColor, labelsHidden: labelsHidden, height: 30)
+        height = nil
     }
 
     /// Builds the switch content for the current state.
@@ -58,7 +82,7 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
                 configuration.isOn.toggle()
             }
         } label: {
-            HStack {
+            HStack(spacing: metrics.spacing) {
                 if !hideLabel {
                     configuration.label
                     Spacer()
@@ -70,7 +94,7 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
                             darkShadow: darkShadowColor,
                             lightShadow: lightShadowColor
                         )
-                        .frame(width: 75 * ratio, height: 45 * ratio)
+                        .frame(width: geometry.width, height: geometry.height)
 
                     Capsule()
                         .fill(configuration.isOn ? tintColor : offTintColor)
@@ -79,7 +103,7 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
                             lightShadow: configuration.isOn ? tintColor : lightShadowColor, spread: 0.35,
                             radius: 3 * ratio
                         )
-                        .frame(width: 70 * ratio, height: 40 * ratio)
+                        .frame(width: geometry.width - 2 * geometry.inset, height: geometry.height - 2 * geometry.inset)
 
                     Circle()
                         .fill(mainColor)
@@ -87,16 +111,16 @@ public struct NeumorphicSwitchToggleStyle: ToggleStyle {
                             darkShadow: darkShadowColor, lightShadow: lightShadowColor, offset: 2 * ratio,
                             radius: 1 * ratio
                         )
-                        .frame(width: 30 * ratio, height: 30 * ratio)
-                        .offset(x: configuration.isOn ? 15 * ratio : -15 * ratio)
+                        .frame(width: geometry.thumbDiameter, height: geometry.thumbDiameter)
+                        .offset(x: configuration.isOn ? geometry.travel : -geometry.travel)
                         .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: configuration.isOn)
                 }
                 .opacity(isEnabled ? 1 : 0.4)
             }
+            .modifier(NeumorphicControlBoundsModifier())
         }
         .buttonStyle(.plain)
         .stateAccessibilityValue(configuration.isOn)
-        .frame(minWidth: 44, minHeight: 44)
     }
 
 }
@@ -108,6 +132,26 @@ private extension View {
 }
 
 public extension View {
+    /// Applies a switch style using platform and `controlSize` defaults.
+    ///
+    /// - Parameters:
+    ///   - tint: The track color while on.
+    ///   - offTint: The track color while off.
+    ///   - mainColor: The surface color.
+    ///   - darkShadowColor: The lower-right shadow color.
+    ///   - lightShadowColor: The upper-left highlight color.
+    ///   - labelsHidden: Whether to hide the label.
+    func switchToggleStyle(
+        tint: Color = .green, offTint: Color = Color.Neumorphic.main, mainColor: Color = Color.Neumorphic.main,
+        darkShadowColor: Color = Color.Neumorphic.darkShadow, lightShadowColor: Color = Color.Neumorphic.lightShadow,
+        labelsHidden: Bool = false
+    ) -> some View {
+        toggleStyle(
+            NeumorphicSwitchToggleStyle(
+                tint: tint, offTint: offTint, mainColor: mainColor, darkShadowColor: darkShadowColor,
+                lightShadowColor: lightShadowColor, labelsHidden: labelsHidden))
+    }
+
     /// Applies the Neumorphic switch toggle style.
     ///
     /// - Parameters:
@@ -117,7 +161,7 @@ public extension View {
     ///   - darkShadowColor: The shadow color applied toward the lower-right edge.
     ///   - lightShadowColor: The highlight color applied toward the upper-left edge.
     ///   - labelsHidden: A Boolean value that hides the label when `true`.
-    ///   - height: The control height in points. Values below 1 are normalized to 1.
+    ///   - height: An explicit surface height, overriding platform sizing. Invalid values become 1.
     func switchToggleStyle(
         tint: Color = .green, offTint: Color = Color.Neumorphic.main, mainColor: Color = Color.Neumorphic.main,
         darkShadowColor: Color = Color.Neumorphic.darkShadow, lightShadowColor: Color = Color.Neumorphic.lightShadow,

@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A compact segmented picker for a small set of hashable options.
 public struct NeumorphicPicker<Selection: Hashable>: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     @Binding private var selection: Selection
     private let options: [Selection]
@@ -24,19 +25,23 @@ public struct NeumorphicPicker<Selection: Hashable>: View {
 
     /// The rendered segmented picker.
     public var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: metrics.spacing) {
             ForEach(options, id: \.self) { option in
                 Button {
                     selection = option
                 } label: {
                     Text(label(option)).font(.subheadline.weight(.medium)).multilineTextAlignment(.center).frame(
-                        maxWidth: .infinity, minHeight: 44)
+                        maxWidth: .infinity
+                    )
+                    .padding(.horizontal, metrics.horizontalPadding)
+                    .padding(.vertical, metrics.verticalPadding)
+                    .modifier(NeumorphicControlBoundsModifier())
                 }
                 .buttonStyle(
                     SoftDynamicButtonStyle(
                         Capsule(), mainColor: theme.mainColor, textColor: theme.secondaryColor,
                         darkShadowColor: theme.darkShadowColor, lightShadowColor: theme.lightShadowColor,
-                        pressedEffect: selection == option ? .flat : .none, padding: 10)
+                        pressedEffect: selection == option ? .flat : .none, padding: 0, minimumSize: .zero)
                 )
                 .opacity(selection == option ? 1 : 0.75)
                 .neumorphicSelectionAccessibility(label: label(option), selected: selection == option)

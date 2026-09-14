@@ -175,6 +175,16 @@ VStack(spacing: 20) {
 
 macOS gets two extras: `.neumorphicFocusRing(_:isFocused:)` for keyboard focus and `.neumorphicHover(_:isHovered:)` for pointer feedback.
 
+## Control sizing
+
+Text fields, sliders, switches, steppers, segmented pickers, menus, checkboxes, radio buttons, and disclosure headers use platform-aware sizing. Regular controls reserve a minimum interaction height of **28 pt on macOS** and **44 pt on iOS**. Content and padding are included once; longer or larger text can grow naturally.
+
+On macOS and iOS 15+, `controlSize` (`.mini`, `.small`, `.regular`, or `.large`) also adjusts custom surfaces and spacing. macOS minimum dimensions are 20/24/28/32 pt; iOS uses 44/44/44/52 pt. Earlier iOS versions use regular metrics. Extra-large currently uses large metrics. Native DatePicker geometry is preserved with platform-specific decoration padding.
+
+Omit Switch `height` to follow the platform and size environment; provide it explicitly to retain a chosen visual height. Transparent margins participate in toggle hit testing, and the whole text-field surface can receive focus while preserving native editing.
+
+**Breaking layout change for the next major release:** Compact Mac controls become smaller, Stepper/Picker/Menu no longer add style padding around an already minimum-sized label, and the original switch style adopts the same sizing as the current style. See [Control sizing](Sources/Neumorphic/Neumorphic.docc/Articles/ControlSizing.md) for geometry and migration details.
+
 ## Buttons
 
 ![Soft button](Docs/images/soft-button.png)

@@ -285,12 +285,23 @@ public extension View {
         modifier(NeumorphicThemedToggleModifier(shape: shape, padding: padding, pressedEffect: pressedEffect))
     }
 
+    /// Applies a themed switch using platform and `controlSize` defaults.
+    ///
+    /// - Parameters:
+    ///   - tint: The track color while on.
+    ///   - labelsHidden: Whether to hide the label.
+    func neumorphicThemedSwitchStyle(
+        tint: Color = .green, labelsHidden: Bool = false
+    ) -> some View {
+        modifier(NeumorphicThemedSwitchModifier(tint: tint, labelsHidden: labelsHidden, height: nil))
+    }
+
     /// Applies a switch style using the current environment theme.
     ///
     /// - Parameters:
     ///   - tint: The track color while the control is on.
     ///   - labelsHidden: A Boolean value that hides the label when `true`.
-    ///   - height: The control height in points. Values below 1 are normalized to 1.
+    ///   - height: An explicit surface height, overriding platform sizing. Invalid values become 1.
     func neumorphicThemedSwitchStyle(
         tint: Color = .green,
         labelsHidden: Bool = false,
@@ -344,17 +355,26 @@ private struct NeumorphicThemedSwitchModifier: ViewModifier {
     @Environment(\.neumorphicTheme) private var theme
     let tint: Color
     let labelsHidden: Bool
-    let height: CGFloat
+    let height: CGFloat?
 
+    @ViewBuilder
     func body(content: Content) -> some View {
-        content.switchToggleStyle(
-            tint: tint,
-            offTint: theme.mainColor,
-            mainColor: theme.mainColor,
-            darkShadowColor: theme.darkShadowColor,
-            lightShadowColor: theme.lightShadowColor,
-            labelsHidden: labelsHidden,
-            height: height
-        )
+        if let height = height {
+            content.switchToggleStyle(
+                tint: tint,
+                offTint: theme.mainColor,
+                mainColor: theme.mainColor,
+                darkShadowColor: theme.darkShadowColor,
+                lightShadowColor: theme.lightShadowColor,
+                labelsHidden: labelsHidden,
+                height: height
+            )
+        } else {
+            content.switchToggleStyle(
+                tint: tint, offTint: theme.mainColor, mainColor: theme.mainColor,
+                darkShadowColor: theme.darkShadowColor, lightShadowColor: theme.lightShadowColor,
+                labelsHidden: labelsHidden)
+        }
+
     }
 }

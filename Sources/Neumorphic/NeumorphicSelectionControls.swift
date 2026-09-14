@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A neumorphic checkbox control.
 public struct NeumorphicCheckbox: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     @Binding private var isOn: Bool
     private let label: String
@@ -21,27 +22,30 @@ public struct NeumorphicCheckbox: View {
         Button {
             isOn.toggle()
         } label: {
-            HStack(spacing: 10) {
-                RoundedRectangle(cornerRadius: 6).fill(theme.mainColor).frame(width: 28, height: 28)
-                    .softInnerShadow(
-                        RoundedRectangle(cornerRadius: 6),
-                        darkShadow: theme.darkShadowColor,
-                        lightShadow: theme.lightShadowColor,
-                        spread: 0.55,
-                        radius: 3
-                    )
-                    .overlay(Text("✓").font(.caption.weight(.bold)).foregroundColor(.accentColor).opacity(isOn ? 1 : 0))
+            HStack(spacing: metrics.spacing) {
+                RoundedRectangle(cornerRadius: metrics.indicatorDiameter / 4).fill(theme.mainColor).frame(
+                    width: metrics.indicatorDiameter, height: metrics.indicatorDiameter
+                )
+                .softInnerShadow(
+                    RoundedRectangle(cornerRadius: metrics.indicatorDiameter / 4),
+                    darkShadow: theme.darkShadowColor,
+                    lightShadow: theme.lightShadowColor,
+                    spread: 0.55,
+                    radius: 3
+                )
+                .overlay(Text("✓").font(.caption.weight(.bold)).foregroundColor(.accentColor).opacity(isOn ? 1 : 0))
                 Text(label).foregroundColor(theme.secondaryColor)
             }
+            .modifier(NeumorphicControlBoundsModifier())
         }
         .buttonStyle(PlainButtonStyle())
         .neumorphicSelectionAccessibility(label: label, selected: isOn)
-        .frame(minHeight: 44)
     }
 }
 
 /// A neumorphic radio button control.
 public struct NeumorphicRadio<Value: Hashable>: View {
+    @NeumorphicControlSizing private var metrics
     @Environment(\.neumorphicTheme) private var theme
     @Binding private var selection: Value
     private let value: Value
@@ -64,23 +68,27 @@ public struct NeumorphicRadio<Value: Hashable>: View {
         Button {
             selection = value
         } label: {
-            HStack(spacing: 10) {
-                Circle().fill(theme.mainColor).frame(width: 28, height: 28)
-                    .softInnerShadow(
-                        Circle(),
-                        darkShadow: theme.darkShadowColor,
-                        lightShadow: theme.lightShadowColor,
-                        spread: 0.55,
-                        radius: 3
-                    )
-                    .overlay(
-                        Circle().fill(Color.accentColor).frame(width: 10, height: 10).opacity(
-                            selection == value ? 1 : 0))
+            HStack(spacing: metrics.spacing) {
+                Circle().fill(theme.mainColor).frame(
+                    width: metrics.indicatorDiameter, height: metrics.indicatorDiameter
+                )
+                .softInnerShadow(
+                    Circle(),
+                    darkShadow: theme.darkShadowColor,
+                    lightShadow: theme.lightShadowColor,
+                    spread: 0.55,
+                    radius: 3
+                )
+                .overlay(
+                    Circle().fill(Color.accentColor).frame(
+                        width: metrics.indicatorDiameter * 0.4, height: metrics.indicatorDiameter * 0.4
+                    ).opacity(
+                        selection == value ? 1 : 0))
                 Text(label).foregroundColor(theme.secondaryColor)
             }
+            .modifier(NeumorphicControlBoundsModifier())
         }
         .buttonStyle(PlainButtonStyle())
         .neumorphicSelectionAccessibility(label: label, selected: selection == value)
-        .frame(minHeight: 44)
     }
 }

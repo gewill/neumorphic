@@ -24,7 +24,9 @@ controls report whether they are selected.
 resulting rectangle hittable, including transparent margins. The `minimumSize` overloads let
 callers override the platform default. The
 hit region does not shrink when pressed. See <doc:ButtonSizing> for platform guidance and the
-difference between label, surface, layout, and shadow bounds.
+difference between label, surface, layout, and shadow bounds. Other controls use the platform and
+control-size policy in <doc:ControlSizing>; expanded toggle targets include transparent margins,
+and text-field gutters receive focus without replacing native editing.
 
 **Selection without color.** Selected states add a symbol or text rather than relying on a color change
 alone, so the distinction survives color-vision differences and grayscale.
