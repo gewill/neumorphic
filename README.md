@@ -177,6 +177,13 @@ macOS gets two extras: `.neumorphicFocusRing(_:isFocused:)` for keyboard focus a
 
 ## Control sizing
 
+Open **Sizing → Controls** in the example app to select a control, switch size classes, compare
+native SwiftUI with Neumorphic, and toggle layout outlines, long labels or disabled states.
+
+| macOS · Regular | iOS · Regular |
+| --- | --- |
+| ![macOS control sizing page](Docs/images/control-sizing-macos.png) | ![iOS control sizing page](Docs/images/control-sizing-ios.png) |
+
 Text fields, sliders, switches, steppers, segmented pickers, menus, checkboxes, radio buttons, and disclosure headers use platform-aware sizing. Regular controls reserve a minimum interaction height of **28 pt on macOS** and **44 pt on iOS**. Content and padding are included once; longer or larger text can grow naturally.
 
 On macOS and iOS 15+, `controlSize` (`.mini`, `.small`, `.regular`, or `.large`) also adjusts custom surfaces and spacing. macOS minimum dimensions are 20/24/28/32 pt; iOS uses 44/44/44/52 pt. Earlier iOS versions use regular metrics. Extra-large currently uses large metrics. Native DatePicker geometry is preserved with platform-specific decoration padding.
@@ -237,6 +244,17 @@ HStack {
     )
 }
 ```
+
+Open **Sizing → Buttons** in the example app for platform minimums, expanded targets, label padding
+and growing text. Dynamic button styles use explicit `size`, `padding` and `minimumSize`; they do
+not use the Controls size selector.
+
+| macOS · Platform minimum | iOS · Platform minimum |
+| --- | --- |
+| ![macOS button sizing page](Docs/images/button-sizing-macos.png) | ![iOS button sizing page](Docs/images/button-sizing-ios.png) |
+
+[Regenerate the sizing screenshots](Scripts/readme-shots/README.md#sizing-page-real-macos-and-ios-controls)
+from the running example app.
 
 Dynamic button styles use a **28×28-point minimum on macOS and 44×44 on iOS**, including the themed modifiers. The complete layout rectangle is hittable, including transparent margins:
 
