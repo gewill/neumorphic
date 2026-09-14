@@ -13,6 +13,7 @@ func renderControlGallery(to directory: URL) {
             .background(Color.Neumorphic.main)
             .environment(\.colorScheme, .light)
             .environment(\.locale, Locale(identifier: "en_US"))
+            .environment(\.timeZone, TimeZone(secondsFromGMT: 0)!)
             .controlSize(.regular)
             .fixedSize(horizontal: false, vertical: true)
         let host = NSHostingView(rootView: content)
@@ -29,7 +30,10 @@ func renderControlGallery(to directory: URL) {
         host.layoutSubtreeIfNeeded()
         window.makeFirstResponder(nil)
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.15))
-        let url = directory.appendingPathComponent("gallery-\(kind.rawValue).png")
+        guard window.backingScaleFactor == 2 else {
+            fatalError("Gallery images require a 2x display to match their @2x filenames")
+        }
+        let url = directory.appendingPathComponent("gallery-\(kind.rawValue)@2x.png")
         let capture = Process()
         capture.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
         capture.arguments = ["-x", "-o", "-l", String(window.windowNumber), url.path]

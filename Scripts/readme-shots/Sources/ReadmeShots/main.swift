@@ -2,10 +2,12 @@ import AppKit
 import Neumorphic
 import SwiftUI
 
-// Renders the README illustrations from the same code the README shows, so the
+// Renders README illustrations and the DocC control gallery. README images use the
+// same code the README shows, so the
 // images cannot drift from the snippets beside them. Run from the repository root:
 //
 //     swift run --package-path Scripts/readme-shots readme-shots
+//     swift run --package-path Scripts/readme-shots readme-shots --gallery
 //
 // `hero.png` and `search-bar.png` are not produced here: they contain a TextField,
 // which ImageRenderer draws as an "unsupported" placeholder. See README.md in this

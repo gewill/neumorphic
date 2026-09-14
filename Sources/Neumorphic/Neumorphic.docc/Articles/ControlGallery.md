@@ -23,7 +23,7 @@ Use ``Neumorphic/SoftDynamicButtonStyle`` for content that grows naturally and
 ``Neumorphic/FixedSizeSoftDynamicButtonStyle`` for an explicit label frame. Apply them with
 `softButtonStyle` and `fixedSizeSoftButtonStyle`; `neumorphicThemedButtonStyle` adds environment theme
 and ``Neumorphic/NeumorphicButtonRole`` support. The preview shows these current styles.
-``Neumorphic/SoftButtonStyle`` remains available for existing code; it is not the style pictured here.
+``Neumorphic/SoftButtonStyle`` is deprecated; use the current dynamic styles pictured here.
 See <doc:ButtonSizing> before choosing padding or an explicit minimum.
 
 ### Pressed effects
@@ -31,14 +31,14 @@ See <doc:ButtonSizing> before choosing padding or an explicit minimum.
 ![Three buttons demonstrating the none, flat, and hard pressed effects.](pressed-effects.gif)
 
 ``Neumorphic/SoftButtonPressedEffect`` selects `.none`, `.flat`, or `.hard` shadow treatment.
-This animation was captured with touch input in the iOS Example app.
+This animation was recorded from the iOS Example app in Simulator with simulated touch input.
 
 ### Switch and shape toggles
 
 ![An enabled switch and a selected circular play toggle.](gallery-toggles.png)
 
 ``Neumorphic/NeumorphicSwitchToggleStyle`` provides the switch via `.toggleStyle(.neumorphicSwitch)`
-or `switchToggleStyle`. ``Neumorphic/SoftDynamicToggleStyle`` provides shape toggles through
+or `switchToggleStyle`; use `neumorphicThemedSwitchStyle` to inherit the environment theme. ``Neumorphic/SoftDynamicToggleStyle`` provides shape toggles through
 `softToggleStyle` or `neumorphicThemedToggleStyle`. ``Neumorphic/SoftSwitchToggleStyle`` is the legacy
 switch style; the preview uses the current switch and themed shape styles.
 
@@ -150,7 +150,9 @@ Use `softOuterShadow` for raised surfaces and `softInnerShadow` for inset surfac
 
 ![Focus and Hover buttons with their corresponding visual indicators enabled.](gallery-focus.png)
 
-``Neumorphic/NeumorphicFocusRing`` adds a focus indicator. ``Neumorphic/NeumorphicHoverEffect`` adds
+Apply `neumorphicFocusRing(_:isFocused:color:lineWidth:)` for a
+``Neumorphic/NeumorphicFocusRing`` indicator, and `neumorphicHover(_:isHovered:color:lineWidth:)`
+for ``Neumorphic/NeumorphicHoverEffect``. The hover modifier adds
 pointer feedback on macOS and has no effect on iOS. These previews explicitly enable the state
 bindings to show appearance; they do not demonstrate keyboard navigation or pointer interaction.
 

@@ -8,7 +8,7 @@ SwiftUI gives you an outer shadow in one line. It has no inner shadow, and neumo
 
 ![Neumorphic controls on a soft surface](Sources/Neumorphic/Neumorphic.docc/Resources/hero.png)
 
-Browse the [complete control gallery](https://swiftpackageindex.com/gewill/neumorphic/master/documentation/neumorphic/controlgallery) for visual previews and API links. The gallery is also included in the package’s DocC documentation hosted by [Swift Package Index](https://swiftpackageindex.com/gewill/neumorphic).
+Browse the [complete control gallery](https://swiftpackageindex.com/gewill/neumorphic/master/documentation/neumorphic/controlgallery) for visual previews and API links.
 
 ## About this fork
 
@@ -184,7 +184,7 @@ native SwiftUI with Neumorphic, and toggle layout outlines, long labels or disab
 
 | macOS · Regular | iOS · Regular |
 | --- | --- |
-| ![macOS control sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/control-sizing-macos.png) | ![iOS control sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/control-sizing-ios.png) |
+| ![macOS control sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/control-sizing-macos@2x.png) | ![iOS control sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/control-sizing-ios@3x.png) |
 
 Text fields, sliders, switches, steppers, segmented pickers, menus, checkboxes, radio buttons, and disclosure headers use platform-aware sizing. Regular controls reserve a minimum interaction height of **28 pt on macOS** and **44 pt on iOS**. Content and padding are included once; longer or larger text can grow naturally.
 
@@ -253,7 +253,7 @@ not use the Controls size selector.
 
 | macOS · Platform minimum | iOS · Platform minimum |
 | --- | --- |
-| ![macOS button sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/button-sizing-macos.png) | ![iOS button sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/button-sizing-ios.png) |
+| ![macOS button sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/button-sizing-macos@2x.png) | ![iOS button sizing page](Sources/Neumorphic/Neumorphic.docc/Resources/button-sizing-ios@3x.png) |
 
 [Regenerate the sizing screenshots](Scripts/readme-shots/README.md#sizing-page-real-macos-and-ios-controls)
 from the running example app.

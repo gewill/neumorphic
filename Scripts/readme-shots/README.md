@@ -1,6 +1,6 @@
 # Documentation illustrations
 
-The images in `Sources/Neumorphic/Neumorphic.docc/Resources/` come from the README snippets or the running Example app. This directory
+The images in `Sources/Neumorphic/Neumorphic.docc/Resources/` come from the README snippets, mounted gallery controls, or the running Example app. This directory
 holds the renderer for standalone illustrations, the capture script for Sizing pages, and the
 procedure for the hero, search bar and pressed-effects animation.
 
@@ -14,11 +14,12 @@ swift run --package-path Scripts/readme-shots readme-shots --gallery
 swift run --package-path Scripts/readme-shots readme-shots --gallery /tmp/neumorphic-gallery
 ```
 
-This mode renders 18 `gallery-*.png` images for the Control Gallery article. It mounts each library
+This mode renders 18 `gallery-*@2x.png` images for the Control Gallery article. It mounts each library
 view in an AppKit window and captures the composited window with `screencapture`, including native text and date editors.
 Run on macOS with a graphical session and Screen Recording permission for the terminal. Previews use light appearance, en_US, regular control size,
-a 360-point content width, and 32 points of surrounding padding for shadows. The capture scale
-follows the display. The focus and hover previews explicitly enable their visual state bindings.
+a fixed UTC time zone, a 360-point content width, and 32 points of surrounding padding for shadows.
+A 2x display is required: the tool checks `backingScaleFactor` and stops on other displays, so the
+848-pixel-wide images match their `@2x` filenames. The focus and hover previews explicitly enable their visual state bindings.
 
 These are macOS appearance illustrations, not iOS sizing or interaction evidence. Update the
 article’s recorded macOS version when regenerating them on a different system. Inspect all output
@@ -36,10 +37,10 @@ Run it from the repository root; it writes into `Sources/Neumorphic/Neumorphic.d
 produces `outer-shadow`, `inner-shadow`, `shadows-side-by-side`, `bar-chart`, `soft-button`,
 `custom-button`, `switch-toggle`, and `shape-toggle` at scale 3.
 
-Afterwards, cap the wide ones at 900 points so they render at a sensible size on GitHub:
+Afterwards, cap the wide ones at 900 pixels so they render at a sensible size on GitHub:
 
 ```sh
-sips -Z 900 Sources/Neumorphic/Neumorphic.docc/Resources/{shadows-side-by-side,outer-shadow,inner-shadow}.png
+sips -Z 900 Sources/Neumorphic/Neumorphic.docc/Resources/{shadows-side-by-side,outer-shadow,inner-shadow,switch-toggle}.png
 ```
 
 ## Captured from the simulator
@@ -160,7 +161,12 @@ Inspect each PNG at full resolution: labels must be visible, outlines must follo
 Stepper must be vertically centered, and shadows need enough space. Publish comparison evidence
 with `gh issue comment --attach` or `gh pr comment --attach`. Only the selected final README
 illustrations belong in `Sources/Neumorphic/Neumorphic.docc/Resources/`; keep audit screenshots, videos and logs outside the repository.
-Copy the four approved images to `Sources/Neumorphic/Neumorphic.docc/Resources/{button,control}-sizing-{macos,ios}.png`.
+Store the approved macOS captures as `{button,control}-sizing-macos@2x.png` and iOS captures as
+`{button,control}-sizing-ios@3x.png` in that directory. Verify the source scale before using those
+suffixes: current macOS captures are 1978×1354 pixels for a 989×677-point window; current iPhone
+captures are 1206×2622 pixels for a 402×874-point screen. Keep DocC image references scale-free
+(e.g. `button-sizing-ios.png`); README links use the actual filename. Do not infer a capture scale
+for older resized illustrations.
 
 For interaction videos, use the running Sizing page and record real size changes, outline toggles
 and control input. A still image does not verify focus, hit targets, VoiceOver or keyboard behavior.
