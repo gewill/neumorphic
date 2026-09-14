@@ -94,6 +94,8 @@ Wrap any view in a raised card surface with `neumorphicCard(_:padding:preset:)`.
 
 ### Button Styles
 
+- <doc:ButtonSizing>
+
 - ``SoftDynamicButtonStyle``
 - ``FixedSizeSoftDynamicButtonStyle``
 - ``SoftButtonPressedEffect``
@@ -101,6 +103,9 @@ Wrap any view in a raised card surface with `neumorphicCard(_:padding:preset:)`.
 
 Applied through `softButtonStyle(_:padding:mainColor:textColor:darkShadowColor:lightShadowColor:pressedEffect:)` and
 `fixedSizeSoftButtonStyle(_:mainColor:textColor:darkShadowColor:lightShadowColor:pressedEffect:size:)`.
+Both default to a 28-by-28-point minimum on macOS and 44-by-44 on iOS, with rectangular hit bounds.
+Overloads ending in `minimumSize:` override that platform default.
+The style initializers offer the same override parameter; see <doc:ButtonSizing>.
 
 ### Toggle Styles
 

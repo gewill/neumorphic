@@ -49,3 +49,27 @@ extension View {
         }
     }
 }
+
+// Keep hit bounds outside the label's press transform and the surface's shadows.
+struct NeumorphicButtonBoundsModifier: ViewModifier {
+    let minimumSize: CGSize?
+
+    static var defaultMinimumSize: CGSize {
+        #if os(macOS)
+            CGSize(width: 28, height: 28)
+        #else
+            CGSize(width: 44, height: 44)
+        #endif
+    }
+
+    func body(content: Content) -> some View {
+        let minimumSize = minimumSize ?? Self.defaultMinimumSize
+        return
+            content
+            .frame(
+                minWidth: minimumSize.width.isFinite ? max(0, minimumSize.width) : 0,
+                minHeight: minimumSize.height.isFinite ? max(0, minimumSize.height) : 0
+            )
+            .contentShape(Rectangle())
+    }
+}

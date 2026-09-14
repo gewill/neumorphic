@@ -15,7 +15,7 @@ This is a fork of [costachung/neumorphic](https://github.com/costachung/neumorph
 What this fork has added since that point:
 
 - **A real control set.** Slider, TextField, Stepper, DatePicker, Picker, Checkbox, Radio, Menu, ProgressView (linear and circular), DisclosureGroup, Link, and a card modifier — so you aren't hand-rolling every widget out of raw shadows.
-- **Accessibility as a baseline, not an afterthought.** VoiceOver labels, values and adjustable actions, 44-point hit targets, non-color selection cues, Dynamic Type layouts, Reduce Motion handling, and macOS keyboard focus.
+- **Accessibility as a baseline, not an afterthought.** VoiceOver labels, values and adjustable actions, configurable button bounds, non-color selection cues, Dynamic Type layouts, Reduce Motion handling, and macOS keyboard focus.
 - **Environment themes.** `.neumorphicTheme(_:)` with a built-in high-contrast preset, plus shadow presets to trade visual depth against rendering cost.
 - **Modern toolchain.** Swift 6 strict-concurrency clean, a DocC catalog, Swift Package Index integration, and CI that checks formatting, both deployment-target floors, DocC, and API compatibility against the previous release tag.
 
@@ -228,7 +228,23 @@ HStack {
 }
 ```
 
-For a fixed visual size that still keeps a 44-point hit area, use `.fixedSizeSoftButtonStyle(_:size:)`.
+Dynamic button styles use a **28×28-point minimum on macOS and 44×44 on iOS**, including the themed modifiers. The complete layout rectangle is hittable, including transparent margins:
+
+```swift
+Button {} label: { Image(systemName: "doc.on.doc") }
+    .fixedSizeSoftButtonStyle(
+        Circle(), size: CGSize(width: 28, height: 28)
+    )
+    .accessibilityLabel("Copy")
+```
+
+Apple's [Accessibility guidelines](https://developer.apple.com/design/human-interface-guidelines/accessibility) list macOS default controls at 28×28 pt (minimum 20×20), and iOS/iPadOS at 44×44 pt (minimum 28×28). The default minimum follows the platform. Override it with `minimumSize`; `.zero` removes it. Negative or nonfinite minimum components become zero.
+
+`size` is the fixed **label frame before padding**. The convenience modifier adds no padding; the style initializer defaults to 16 pt per edge. The surface covers the padded label, then `minimumSize` adds transparent space as needed. With all dynamic style overloads, the entire final rectangle is hittable and stays stable during presses. Outer shadows can extend beyond it and reserve no layout space.
+
+For growing or multiline text, use `.softButtonStyle(Capsule(), padding: 6)`. See [Button sizing](Sources/Neumorphic/Neumorphic.docc/Articles/ButtonSizing.md) for the full sizing contract.
+
+**Breaking layout change for the next major release:** The previous macOS minimum was 44×44 pt. Existing calls now use 28×28 pt, so compact buttons can occupy less space. Pass `minimumSize: CGSize(width: 44, height: 44)` to keep the previous minimum. Larger content and explicit `size` values still determine the final layout.
 
 ### Pressed effects
 
@@ -293,7 +309,7 @@ VStack {
 
 ## Accessibility
 
-Neumorphism is a low-contrast style, which makes accessibility work load-bearing rather than optional. Across the full supported deployment range, the controls here provide VoiceOver labels, values, traits, and adjustable actions; keep at least 44-point interaction targets; signal selection with symbols and not color alone; and respect Reduce Motion in anything animated.
+Neumorphism is a low-contrast style, which makes accessibility work load-bearing rather than optional. Across the full supported deployment range, the controls here provide VoiceOver labels, values, traits, and adjustable actions; provide rectangular button hit bounds with platform defaults and a `minimumSize` override; signal selection with symbols and not color alone; and respect Reduce Motion in anything animated.
 
 Two things worth doing on your side: pass `accessibilityLabel` to sliders and progress views so VoiceOver announces something more useful than "Slider", and test with VoiceOver, Larger Text, Increase Contrast, Reduce Motion, and a hardware keyboard on macOS.
 

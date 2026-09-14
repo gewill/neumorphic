@@ -19,10 +19,12 @@ shapes. ``Neumorphic/NeumorphicSlider`` exposes an adjustable action so VoiceOve
 swipe gestures, progress indicators report a clamped percentage or a loading state, and selection
 controls report whether they are selected.
 
-**Hit targets.** Interactive controls reserve at least 44 points in the direction that matters, even
-where the drawn surface is smaller. `fixedSizeSoftButtonStyle(_:mainColor:textColor:darkShadowColor:lightShadowColor:pressedEffect:size:)`
-keeps its 44-point target while rendering at whatever visual size you asked for, so a compact icon
-button stays reachable.
+**Hit targets.** Dynamic button styles reserve a minimum 28-by-28-point layout on macOS and
+44-by-44 on iOS by default, including themed buttons. All dynamic style overloads make the whole
+resulting rectangle hittable, including transparent margins. The `minimumSize` overloads let
+callers override the platform default. The
+hit region does not shrink when pressed. See <doc:ButtonSizing> for platform guidance and the
+difference between label, surface, layout, and shadow bounds.
 
 **Selection without color.** Selected states add a symbol or text rather than relying on a color change
 alone, so the distinction survives color-vision differences and grayscale.

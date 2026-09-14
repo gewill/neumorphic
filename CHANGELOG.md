@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased (next major)
+
+### Breaking Changes
+
+- Changed the default minimum layout of dynamic buttons on macOS from 44×44 to 28×28 points, including themed buttons. iOS retains 44×44. Compact Mac buttons can now occupy less space; pass `minimumSize: CGSize(width: 44, height: 44)` to retain the previous minimum. Existing signatures and padding behavior remain available.
+
+### Added
+
+- Added opt-in `minimumSize` overloads for dynamic button styles and their convenience modifiers. Callers can override the platform minimum. All dynamic style overloads use rectangular hit bounds that include transparent margins and stay stable during presses.
+
+### Documentation
+
+- Clarified that fixed button `size` sets the label frame before padding, and distinguished surface bounds, complete layout, hit regions, and shadows. Documented Apple’s platform control sizes and natural text growth.
+
 ## 2.4.1 - 2026-08-28
 
 ### Documentation
